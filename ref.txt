@@ -1,0 +1,127 @@
+1. Master
+- A master is a device that initiates transactions on the bus. 
+- It sends requests (e.g., read or write requests) to the slave and can provide addresses, data, or control signals.
+- Examples of Masters in AXI Systems:
+CPU/Processor Core: Requests data/instructions from memory or peripheral devices.
+
+////////////////////////////////////////////////////////////////////
+
+2. Slave
+- A slave is a device that responds to the master's requests. 
+- It processes the address and control signals from the master and 
+either provides data (for a read transaction) or accepts data (for a write transaction).
+- Examples of Slaves in AXI Systems:
+Memory (RAM): Provides or stores data requested by the master.
+
+////////////////////////////////////////////////////////////////////
+
+Example: CPU and Memory
+- Master: CPU
+The CPU fetches instructions and data from memory to execute programs.
+The CPU initiates both read and write requests.
+- Slave: Memory
+The memory responds to the CPU’s requests by providing data (read) or storing data (write).
+
+////////////////////////////////////////////////////////////////////
+
+3. A read transaction is initiated by the master to retrieve data from a slave device
+STEPS:
+a. Master Requests Data:
+- The master sends a read request via the AR (Address Read) channel.
+- Signals like araddr, arid, arlen, etc., specify the address of the data, the ID of the transaction, and the size/length of the read burst.
+b. Slave Processes the Request:
+The slave receives the read address and prepares the requested data.
+c. Slave Sends the Data:
+- The slave responds via the R (Read) channel.
+- Signals like rdata, rvalid, and rresp deliver the requested data and indicate whether the transaction was successful.
+- rlast is asserted if this is the last transfer in a burst.
+d. Master Acknowledges the Data:
+The master acknowledges receipt of the data using the rready signal.
+
+////////////////////////////////////////////////////////////////////
+
+4. Write Transaction: A write transaction is initiated by the master to send data to a slave device (e.g., memory, peripheral).
+STEPS:
+a. Master Sends Write Request:
+- The master sends a write request via the AW (Address Write) channel.
+- Signals like awaddr, awid, awlen, etc., specify the address where the data will be written, the transaction ID, and the size/length of the burst.
+b. Master Sends Data:
+- The master transmits the data via the W (Write) channel.
+- Signals like wdata (data being sent), wstrb (byte enable), and wlast (indicates the last transfer in a burst) are used.
+- The wvalid signal indicates that the data is valid.
+c. Slave Acknowledges Data:
+- The slave accepts the data using the wready signal.
+- Once all data is received, the slave processes the write.
+d. Slave Sends Response:
+- The slave sends a response back to the master via the B (Write Response) channel.
+- Signals like bresp indicate whether the write was successful.
+
+////////////////////////////////////////////////////////////////////
+
+5. Read vs. Write Example
+Scenario: CPU Reads/Writes Data from/to Memory
+a. Read Transaction (CPU Reads Memory):
+- The CPU (master) sends the address of the data it wants to read via the AR channel.
+- The memory (slave) retrieves the data and sends it back via the R channel.
+b. Write Transaction (CPU Writes to Memory):
+- The CPU (master) sends the address of where it wants to write and the data itself via the AW and W channels, respectively.
+- The memory (slave) stores the data and sends a response via the B channel.
+
+////////////////////////////////////////////////////////////////////
+
+A burst type transaction refers to a series of data transfers that occur consecutively in a single transaction
+
+
+In this project, burst type is wrapping burst at value 2 (system.cpp - Line 134), any non-wrapping burst are not supported
+The burst length must equal 8 transfers (m_axi_arlen + 1 == 8)
+The address (m_axi_araddr) must be aligned to the burst size
+The address is masked with ~0x3fULL (0b111111 in binary), which aligns it to a 64-byte boundary.
+The transfer size is not explicitly checked in the code, but since the burst size is 64 bytes and the burst length is 8 transfers:
+Each transfer size (m_axi_arsize) is 8 bytes (64 bits).
+In AXI, transfer size is encoded as log2(bytes per transfer). For 8 bytes, m_axi_arsize = 3'b011.
+
+////////////////////////////////////////////////////////////////////
+
+Fetch is a specific type of read operation that pulls instructions.
+Read operations can be broader and also include data fetching.
+Write operations are distinct from both fetch and read, but they interact when the CPU changes the state of memory.
+
+////////////////////////////////////////////////////////////////////
+
+Read Address (m_axi_araddr)	                    64-byte aligned
+Write Address (m_axi_awaddr)	                64-byte aligned
+Transaction Length (m_axi_arlen / m_axi_awlen)	Must be 8
+Memory Start (dram_offset)	                    Depends on full_system mode
+RAM Size (ramsize)	                            Defined at initialization -> size of allocated memory
+Stack Pointer (top->stackptr)	                ramsize - 4*MEGA
+AXI Bus Ready (m_axi_rvalid / m_axi_bvalid)	    1 when transaction is valid
+
+///////////////////////////////////////
+
+Physical Memory Start	0x0000 (if full_system is disabled)
+DRAM Start Address	DRAM_OFFSET (if full_system is enabled)
+Program Entry (ELF Execution Start)	Defined by load_binary(), usually loaded at 0x10000 or 0x80000000 depending on the binary
+Stack Start Address	ramsize - 4MB
+
+////////////////////////////////////////
+
+64-Byte WRAP Burst
+Assume:
+
+Start address = 0x1000
+Burst length = 8 (8 transfers)
+Data width = 8 bytes (64-bit system)
+Total transfer size = 8 × 8 = 64 bytes
+Boundary = 64 bytes (aligned to 0x40)
+
+- **Beat (8 bytes):** Each beat transfers 8 bytes of data (two 32-bit instructions).  
+- **Total Transfer (64 bytes):** The entire burst transfers 64 bytes of data, which in your example corresponds to 16 instructions.  
+- **Beat Breakdown for pc = 0x0:**  
+- Beat 0 → Addresses 0x0–0x7  (8 bytes = 64 bits)
+- Beat 1 → Addresses 0x8–0xF  
+- Beat 2 → Addresses 0x10–0x17  
+- Beat 3 → Addresses 0x18–0x1F  
+- Beat 4 → Addresses 0x20–0x27  
+- Beat 5 → Addresses 0x28–0x2F  
+- Beat 6 → Addresses 0x30–0x37  
+- Beat 7 → Addresses 0x38–0x3F
