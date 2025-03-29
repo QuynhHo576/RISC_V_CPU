@@ -81,9 +81,9 @@ module top
  // Define state machine states using a named enumeration
 typedef enum logic [2:0] {
    SEND_READ_ADDRESS = 3'b000,
-   SEND_READ_ADDRESS_COMPLETE = 3'b001,
-   SEND_READ_DATA    = 3'b010,
-   SEND_READ_DATA_COMPLETE = 3'b011,
+   //SEND_READ_ADDRESS_COMPLETE = 3'b001,
+   SEND_READ_DATA    = 3'b001,
+   //SEND_READ_DATA_COMPLETE = 3'b011,
    DECODE_INSTRUCTION = 3'b100
 } state_t;
 
@@ -177,19 +177,23 @@ always_comb begin
        case(state)
            SEND_READ_ADDRESS: begin   
                if (m_axi_arready && m_axi_arvalid)   
-                   send_address_complete = 1; 
                    next_state = SEND_READ_DATA;
            end
            SEND_READ_DATA: begin
                if (m_axi_rvalid && m_axi_rready) begin
                    if (m_axi_rdata == 64'b0) $finish;
-                   else begin
-                       fetched_instr             = m_axi_rdata;
                        next_state = DECODE_INSTRUCTION;
-                   end
                end
            end
-           SEND_READ_DATA_COMPLETE:    next_state = DECODE_INSTRUCTION;
+           DECODE_INSTRUCTION:    
+                if (m_axi_rlast) begin
+                    if (!m_axi_rvalid) begin
+                        next_pc = pc + 64;
+                        next_state = SEND_READ_ADDRESS;
+                    end
+                end else begin
+                    next_state = SEND_READ_DATA;
+                end
        endcase
    end
 end
@@ -197,17 +201,33 @@ end
 
 //Sequential logic to keep track of combinational logic output
 always_ff @(posedge clk) begin
+    m_axi_araddr <= pc;
+    m_axi_arlen <= 7;
+    m_axi_arsize <= 8;
+    m_axi_arburst <= 2;
    //READ ADDRESS CHANNEL
-   if (reset == 1 || state != SEND_READ_ADDRESS)
+    if (reset == 1 || state == SEND_READ_ADDRESS && next_state == SEND_READ_DATA)
        m_axi_arvalid <= 0;
-   if (reset == 0 && state == SEND_READ_ADDRESS) //when reset ends and in state of sending read address
-       m_axi_arvalid <= 1; //assert address is valid
-   if (state == SEND_READ_ADDRESS_COMPLETE)
-       m_axi_arvalid <= 0;
-   if (reset == 00 && state == SEND_READ_DATA && m_axi_rvalid == 1)
+    if (reset == 0 && state == SEND_READ_ADDRESS) 
+       m_axi_arvalid <= 1; 
+    // if (state == SEND_READ_ADDRESS)
+    //     m_axi_arvalid <= 0;
+
+    //READ DATA CHANNEL
+    if (reset == 00 && state == SEND_READ_DATA && m_axi_rvalid == 1)
        m_axi_rready <= 1;
-   if (reset == 1 || state != SEND_READ_DATA || m_axi_rvalid == 0)
-       m_axi_rready              <= 0;
+    if (reset == 1 || state != SEND_READ_DATA || m_axi_rvalid == 0)
+       m_axi_rready <= 0;
+    if (next_state == SEND_READ_DATA && state == DECODE_INSTRUCTION) begin
+        m_axi_rready <= 0;
+        fetched_instr <= m_axi_rdata;
+    end
+    //DECODE
+    if (state == DECODE_INSTRUCTION) begin
+        decoding(display_addr, fetched_instr[31:0]);
+        decoding(display_addr + 4, fetched_instr[63:32]);
+        next_display_addr = display_addr + 8;
+    end
 end
 
 always_ff @(posedge clk) begin
@@ -217,6 +237,7 @@ always_ff @(posedge clk) begin
    end else
        state <= next_state;
        pc    <= next_pc;
+       display_addr <= next_display_addr;
 end
 
 
