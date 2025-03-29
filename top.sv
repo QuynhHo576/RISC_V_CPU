@@ -121,17 +121,18 @@ logic [ADDR_WIDTH-1:0] next_display_addr;
 //                 SEND_READ_ADDRESS: begin
 //                     m_axi_arvalid <= 1;
 //                     if (m_axi_arready && m_axi_arvalid) begin
-//                         next_state                 <= SEND_READ_ADDRESS_COMPLETE;
+//                         next_state                 <= SEND_READ_DATA;
 //                     end
 //                 end
 
 
-//                 SEND_READ_ADDRESS_COMPLETE: begin
-//                     m_axi_arvalid <= 0;
-//                     next_state                 <= SEND_READ_DATA;
-//                 end
+//                 // SEND_READ_ADDRESS_COMPLETE: begin
+//                 //     m_axi_arvalid <= 0;
+//                 //     next_state                 <= SEND_READ_DATA;
+//                 // end
               
 //                 SEND_READ_DATA: begin
+//                     m_axi_arvalid <= 0;
 //                     m_axi_rready <= 1;
 //                     if (m_axi_rvalid && m_axi_rready) begin
 //                         if (m_axi_rdata == 64'b0) begin
@@ -144,7 +145,6 @@ logic [ADDR_WIDTH-1:0] next_display_addr;
 //                     end
 //                 end
 
-//abc
 //                 DECODE_INSTRUCTION: begin //something r
 //                     decoding(display_addr, fetched_instr[31:0]);
 //                     decoding(display_addr + 4, fetched_instr[63:32]);

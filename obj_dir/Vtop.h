@@ -131,9 +131,6 @@ VL_MODULE(Vtop) {
     void __Vconfigure(Vtop__Syms* symsp, bool first);
   private:
     static QData	_change_request(Vtop__Syms* __restrict vlSymsp);
-  public:
-    static void	_combo__TOP__3(Vtop__Syms* __restrict vlSymsp);
-  private:
     void	_configure_coverage(Vtop__Syms* __restrict vlSymsp, bool first);
     void	_ctor_var_reset();
   public:
@@ -145,7 +142,6 @@ VL_MODULE(Vtop) {
     static void	traceChgThis(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
     static void	traceChgThis__2(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
     static void	traceChgThis__3(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
-    static void	traceChgThis__4(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
     static void	traceFullThis(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
     static void	traceFullThis__1(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
     static void	traceInitThis(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
