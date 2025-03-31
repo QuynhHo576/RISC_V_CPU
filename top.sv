@@ -102,74 +102,8 @@ logic [ADDR_WIDTH-1:0] next_display_addr;
 //The PC points to the memory address of the instruction.
 //The CPU sends a signal to the memory to retrieve the instruction at that address.
 //The retrieved instruction is then stored in the instruction register (IR).
-// Combined AXI Handling & FSM Logic
-//     always_ff @(posedge clk) begin
-//         if (reset) begin
-//             // Reset values
-//             pc                         <= entry;
-//             state                      <= SEND_READ_ADDRESS;
-//             m_axi_arvalid              <= 0;
-//             //m_axi_rready               <= 0;
-//         end else begin
-//             // Default AXI values
-//             m_axi_araddr  <= pc;
-//             m_axi_arlen   <= 7;
-//             m_axi_arsize  <= 8;
-//             m_axi_arburst <= 2;
-//             // FSM Transitions
-//             case (state)
-//                 SEND_READ_ADDRESS: begin
-//                     m_axi_arvalid <= 1;
-//                     if (m_axi_arready && m_axi_arvalid) begin
-//                         next_state                 <= SEND_READ_DATA;
-//                     end
-//                 end
-
-
-//                 // SEND_READ_ADDRESS_COMPLETE: begin
-//                 //     m_axi_arvalid <= 0;
-//                 //     next_state                 <= SEND_READ_DATA;
-//                 // end
-              
-//                 SEND_READ_DATA: begin
-//                     m_axi_arvalid <= 0;
-//                     m_axi_rready <= 1;
-//                     if (m_axi_rvalid && m_axi_rready) begin
-//                         if (m_axi_rdata == 64'b0) begin
-//                             $finish;
-//                         end
-//                         fetched_instr             <= m_axi_rdata; //fetched will get new data when the state is read
-//                         //fetched_instr_delay       <= fetched_instr;
-//                         m_axi_rready              <= 0;
-//                         next_state                <= DECODE_INSTRUCTION;
-//                     end
-//                 end
-
-//                 DECODE_INSTRUCTION: begin //something r
-//                     decoding(display_addr, fetched_instr[31:0]);
-//                     decoding(display_addr + 4, fetched_instr[63:32]);
-//                     display_addr <= display_addr + 8;
-
-
-//                     if (m_axi_rlast) begin
-//                         if (!m_axi_rvalid) begin
-//                             next_pc    <= pc + 64;
-//                             next_state <= SEND_READ_ADDRESS;
-//                         end
-              
-//                     end
-//                     else begin
-//                         next_state <= SEND_READ_DATA;
-//                     end
-//                 end
-//             endcase
-//         end
-//     end
-// always_ff @(posedge clk) begin
-//     state <= next_state;
-//     pc    <= next_pc;
-// end
-
+//ALU: op1 op2, tin hieu chon phep toan, function add, and, xor, shift
+//load and store
 
 // //Combinational logic to handle read transaction of current state
 always_comb begin
@@ -188,6 +122,7 @@ always_comb begin
            DECODE_INSTRUCTION:    
                 if (m_axi_rlast) begin
                     if (!m_axi_rvalid) begin
+                        
                         next_pc = pc + 64;
                         next_state = SEND_READ_ADDRESS;
                     end
@@ -200,33 +135,34 @@ end
 
 
 //Sequential logic to keep track of combinational logic output
-always_ff @(posedge clk) begin
+always_ff @(posedge clk) begin 
+    //reset
     m_axi_araddr <= pc;
     m_axi_arlen <= 7;
     m_axi_arsize <= 8;
     m_axi_arburst <= 2;
-   //READ ADDRESS CHANNEL
-    if (reset == 1 || state == SEND_READ_ADDRESS && next_state == SEND_READ_DATA)
-       m_axi_arvalid <= 0;
-    if (reset == 0 && state == SEND_READ_ADDRESS) 
-       m_axi_arvalid <= 1; 
-    // if (state == SEND_READ_ADDRESS)
-    //     m_axi_arvalid <= 0;
+    
+    if(!reset) begin
+    //READ ADDRESS CHANNEL
+        if (state == SEND_READ_ADDRESS) 
+            m_axi_arvalid <= 1; 
+        else m_axi_arvalid <= 0; 
+        if (m_axi_arvalid == 1 && m_axi_arready == 1)
+            m_axi_arvalid <= 0;
 
-    //READ DATA CHANNEL
-    if (reset == 00 && state == SEND_READ_DATA && m_axi_rvalid == 1)
-       m_axi_rready <= 1;
-    if (reset == 1 || state != SEND_READ_DATA || m_axi_rvalid == 0)
-       m_axi_rready <= 0;
-    if (next_state == SEND_READ_DATA && state == DECODE_INSTRUCTION) begin
-        m_axi_rready <= 0;
-        fetched_instr <= m_axi_rdata;
-    end
-    //DECODE
-    if (state == DECODE_INSTRUCTION) begin
-        decoding(display_addr, fetched_instr[31:0]);
-        decoding(display_addr + 4, fetched_instr[63:32]);
-        next_display_addr = display_addr + 8;
+        //READ DATA CHANNEL
+        if (state == SEND_READ_DATA && m_axi_rvalid == 1)
+            m_axi_rready <= 1;
+        if (m_axi_rvalid == 1 && m_axi_rready == 1) begin
+            m_axi_rready <= 0;
+            fetched_instr <= m_axi_rdata;
+        end
+        //DECODE
+        if (state == DECODE_INSTRUCTION) begin
+            decoding(display_addr, fetched_instr[31:0]);
+            decoding(display_addr + 4, fetched_instr[63:32]);
+            next_display_addr <= display_addr + 8;
+        end
     end
 end
 
@@ -260,7 +196,7 @@ function decoding([32:0] address, [32:0] input_bin);
        rd = input_bin[11:7];         // Destination register is bits [11:7]
        funct3 = input_bin[14:12];    // Function3 is bits [14:12]
        funct7 = input_bin[31:25];    // Function7 is bits [31:25] (only for R-type)
-
+    
 
        case (opcode)
            // R-Type Instructions (opcode: 0110011)

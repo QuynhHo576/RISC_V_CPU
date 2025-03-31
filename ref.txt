@@ -114,7 +114,7 @@ Data width = 8 bytes (64-bit system)
 Total transfer size = 8 × 8 = 64 bytes
 Boundary = 64 bytes (aligned to 0x40)
 
-- **Beat (8 bytes):** Each beat transfers 8 bytes of data (two 32-bit instructions).  
+- **Beat (8 bytes - 64 bit):** Each beat transfers 8 bytes  of data (two 32-bit instructions).  
 - **Total Transfer (64 bytes):** The entire burst transfers 64 bytes of data, which in your example corresponds to 16 instructions.  
 - **Beat Breakdown for pc = 0x0:**  
 - Beat 0 → Addresses 0x0–0x7  (8 bytes = 64 bits)
