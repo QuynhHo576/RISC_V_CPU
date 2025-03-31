@@ -133,7 +133,6 @@ always_comb begin
    end
 end
 
-
 //Sequential logic to keep track of combinational logic output
 always_ff @(posedge clk) begin 
     //reset
