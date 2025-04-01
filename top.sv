@@ -1,5 +1,5 @@
 `include "Sysbus.defs"
-
+//`include "top.sv"
 
 module top
 #(
@@ -89,10 +89,8 @@ typedef enum logic [2:0] {
 
 
 state_t state, next_state;
-logic read_address_handshake_flag, read_data_handshake_flag;
 logic [63:0] next_pc;
 logic [DATA_WIDTH-1:0] fetched_instr;
-logic [DATA_WIDTH-1:0] fetched_instr_delay;
 logic [ADDR_WIDTH-1:0] display_addr;
 logic [ADDR_WIDTH-1:0] next_display_addr;
 //Fetch fetching the instruction from memory.
@@ -165,6 +163,17 @@ always_ff @(posedge clk) begin
     end
 end
 
+// Decoder decoder (
+//         .address(display_addr),
+//         .input_bin(fetched_instr[31:0])
+// );
+// Decoder decoder (
+//         .address(display_addr + 4),
+//         .input_bin(fetched_instr[63:32])
+// );
+
+
+//sequential logic to toggle between the states
 always_ff @(posedge clk) begin
    if (reset) begin
        pc                         <= entry;
@@ -176,7 +185,7 @@ always_ff @(posedge clk) begin
 end
 
 
-function decoding([32:0] address, [32:0] input_bin);
+function decoding([31:0] address, [31:0] input_bin);
    reg [7:11] rd;        // Destination register
    reg [6:0] opcode;    // Opcode
    reg [2:0] funct3;    // Function field

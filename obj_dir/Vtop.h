@@ -79,20 +79,18 @@ VL_MODULE(Vtop) {
     // Internals; generally not touched by application code
     VL_SIG8(top__DOT__state,2,0);
     VL_SIG8(top__DOT__next_state,2,0);
-    VL_SIG8(top__DOT__read_address_handshake_flag,0,0);
-    VL_SIG8(top__DOT__read_data_handshake_flag,0,0);
+    //char	__VpadToAlign118[2];
     VL_SIG64(top__DOT__pc,63,0);
     VL_SIG64(top__DOT__instruction,63,0);
     VL_SIG64(top__DOT__next_pc,63,0);
     VL_SIG64(top__DOT__fetched_instr,63,0);
-    VL_SIG64(top__DOT__fetched_instr_delay,63,0);
     VL_SIG64(top__DOT__display_addr,63,0);
     VL_SIG64(top__DOT__next_display_addr,63,0);
     
     // LOCAL VARIABLES
     // Internals; generally not touched by application code
     VL_SIG8(__Vclklast__TOP__clk,0,0);
-    //char	__VpadToAlign181[3];
+    //char	__VpadToAlign173[3];
     VL_SIG(__Vm_traceActivity,31,0);
     
     // INTERNAL VARIABLES

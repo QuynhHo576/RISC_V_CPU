@@ -155,11 +155,8 @@ void Vtop::traceInitThis__1(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, 
 	vcdp->declQuad (c+69,"top instruction",-1,63,0);
 	vcdp->declBus  (c+6,"top state",-1,2,0);
 	vcdp->declBus  (c+1,"top next_state",-1,2,0);
-	vcdp->declBit  (c+71,"top read_address_handshake_flag",-1);
-	vcdp->declBit  (c+72,"top read_data_handshake_flag",-1);
 	vcdp->declQuad (c+2,"top next_pc",-1,63,0);
 	vcdp->declQuad (c+7,"top fetched_instr",-1,63,0);
-	vcdp->declQuad (c+73,"top fetched_instr_delay",-1,63,0);
 	vcdp->declQuad (c+9,"top display_addr",-1,63,0);
 	vcdp->declQuad (c+11,"top next_display_addr",-1,63,0);
     }
@@ -227,8 +224,5 @@ void Vtop::traceFullThis__1(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, 
 	vcdp->fullBus  (c+67,(0x40U),32);
 	vcdp->fullBus  (c+68,(8U),32);
 	vcdp->fullQuad (c+69,(vlTOPp->top__DOT__instruction),64);
-	vcdp->fullBit  (c+71,(vlTOPp->top__DOT__read_address_handshake_flag));
-	vcdp->fullBit  (c+72,(vlTOPp->top__DOT__read_data_handshake_flag));
-	vcdp->fullQuad (c+73,(vlTOPp->top__DOT__fetched_instr_delay),64);
     }
 }
