@@ -180,19 +180,11 @@ end
 function decoding([31:0] address, [31:0] input_bin);
    reg [7:11] rd;        // Destination register
    reg [4:0] rs1, rs2; 
-   reg [31:0] imm;
+   logic signed [31:0] imm;
    reg [6:0] opcode;    // Opcode
    reg [2:0] funct3;    // Function field
    reg [6:0] funct7;    // Function field (for R-type)
    reg [63:0] decoded_instruction; // Human-readable decoded instruction
-   
-//    string reg_names [0:31] = { 
-//     "zero", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
-//     "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5", 
-//     "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7", 
-//     "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
-//     };
-
 
    // Internal registers
    reg [4:0] shamt; // Shift amount for certain instructions
@@ -205,7 +197,7 @@ function decoding([31:0] address, [31:0] input_bin);
        rd = input_bin[11:7];         // Destination register is bits [11:7]
        funct3 = input_bin[14:12];    // Function3 is bits [14:12]
        funct7 = input_bin[31:25];    // Function7 is bits [31:25] (only for R-type)
-       output rs1 = input_bin[19:15]; // Source Register 1
+       rs1 = input_bin[19:15]; // Source Register 1
        rs2 = input_bin[24:20]; // Source Register 2
        imm = input_bin[31:20]; // Immediate Value (for I-type)
        

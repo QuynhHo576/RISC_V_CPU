@@ -74,7 +74,7 @@ void Vtop::_initial__TOP__1(Vtop__Syms* __restrict vlSymsp) {
     VL_DEBUG_IF(VL_PRINTF("    Vtop::_initial__TOP__1\n"); );
     Vtop* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
-    // INITIAL at top.sv:352
+    // INITIAL at top.sv:344
     VL_WRITEF("Initializing top, entry point = 0x%x\n",
 	      64,vlTOPp->entry);
 }
@@ -264,7 +264,7 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 				}
 			    }
 			}
-			VL_WRITEF("%x :%x %s x%2#, x%2#, %10#\n",
+			VL_WRITEF("%x :%x %s x%2#, x%2#, %11d\n",
 				  32,__Vtask_top__DOT__decoding__0__address,
 				  32,__Vtask_top__DOT__decoding__0__input_bin,
 				  64,__Vtask_top__DOT__decoding__0__decoded_instruction,
@@ -291,7 +291,7 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 				    }
 				}
 			    }
-			    VL_WRITEF("%x :%x %s x%2#, x%2#, %10#\n",
+			    VL_WRITEF("%x :%x %s x%2#, x%2#, %11d\n",
 				      32,__Vtask_top__DOT__decoding__0__address,
 				      32,__Vtask_top__DOT__decoding__0__input_bin,
 				      64,__Vtask_top__DOT__decoding__0__decoded_instruction,
@@ -330,7 +330,7 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 					}
 				    }
 				}
-				VL_WRITEF("%x :%x %s x%2#, %10#(x%2#)\n",
+				VL_WRITEF("%x :%x %s x%2#, %11d(x%2#)\n",
 					  32,__Vtask_top__DOT__decoding__0__address,
 					  32,__Vtask_top__DOT__decoding__0__input_bin,
 					  64,__Vtask_top__DOT__decoding__0__decoded_instruction,
@@ -377,7 +377,7 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 					    }
 					}
 				    }
-				    VL_WRITEF("%x :%x %s x%2#, x%2#, %10#\n",
+				    VL_WRITEF("%x :%x %s x%2#, x%2#, %11d\n",
 					      32,__Vtask_top__DOT__decoding__0__address,
 					      32,__Vtask_top__DOT__decoding__0__input_bin,
 					      64,__Vtask_top__DOT__decoding__0__decoded_instruction,
@@ -392,7 +392,7 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 					    = (0xfffff000U 
 					       & __Vtask_top__DOT__decoding__0__input_bin);
 					__Vtask_top__DOT__decoding__0__decoded_instruction = VL_ULL(0x4c5549);
-					VL_WRITEF("%x :%x      LUI x%2#, %10#\n",
+					VL_WRITEF("%x :%x      LUI x%2#, %11d\n",
 						  32,
 						  __Vtask_top__DOT__decoding__0__address,
 						  32,
@@ -408,7 +408,7 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 						= (0xfffff000U 
 						   & __Vtask_top__DOT__decoding__0__input_bin);
 					    __Vtask_top__DOT__decoding__0__decoded_instruction = VL_ULL(0x4155495043);
-					    VL_WRITEF("%x :%x    AUIPC x%2#, %10#\n",
+					    VL_WRITEF("%x :%x    AUIPC x%2#, %11d\n",
 						      32,
 						      __Vtask_top__DOT__decoding__0__address,
 						      32,
@@ -438,7 +438,7 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 							       & (__Vtask_top__DOT__decoding__0__input_bin 
 								  >> 0x14U))))));
 					    __Vtask_top__DOT__decoding__0__decoded_instruction = VL_ULL(0x4a414c);
-					    VL_WRITEF("%x :%x      JAL x%2#, %10#\n",
+					    VL_WRITEF("%x :%x      JAL x%2#, %11d\n",
 						      32,
 						      __Vtask_top__DOT__decoding__0__address,
 						      32,
@@ -456,7 +456,7 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 		}
 	    } else {
 		if (VL_UNLIKELY((0x67U == (IData)(__Vtask_top__DOT__decoding__0__opcode)))) {
-		    VL_WRITEF("%x :%x     JALR x%2#, x%2#, %10#\n",
+		    VL_WRITEF("%x :%x     JALR x%2#, x%2#, %11d\n",
 			      32,__Vtask_top__DOT__decoding__0__address,
 			      32,__Vtask_top__DOT__decoding__0__input_bin,
 			      5,(IData)(__Vtask_top__DOT__decoding__0__rd),
@@ -476,7 +476,7 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 				}
 			    }
 			}
-			VL_WRITEF("%x :%x %s x%2#, %10#(x%2#)\n",
+			VL_WRITEF("%x :%x %s x%2#, %11d(x%2#)\n",
 				  32,__Vtask_top__DOT__decoding__0__address,
 				  32,__Vtask_top__DOT__decoding__0__input_bin,
 				  64,__Vtask_top__DOT__decoding__0__decoded_instruction,
@@ -615,7 +615,7 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 				}
 			    }
 			}
-			VL_WRITEF("%x :%x %s x%2#, x%2#, %10#\n",
+			VL_WRITEF("%x :%x %s x%2#, x%2#, %11d\n",
 				  32,__Vtask_top__DOT__decoding__1__address,
 				  32,__Vtask_top__DOT__decoding__1__input_bin,
 				  64,__Vtask_top__DOT__decoding__1__decoded_instruction,
@@ -642,7 +642,7 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 				    }
 				}
 			    }
-			    VL_WRITEF("%x :%x %s x%2#, x%2#, %10#\n",
+			    VL_WRITEF("%x :%x %s x%2#, x%2#, %11d\n",
 				      32,__Vtask_top__DOT__decoding__1__address,
 				      32,__Vtask_top__DOT__decoding__1__input_bin,
 				      64,__Vtask_top__DOT__decoding__1__decoded_instruction,
@@ -681,7 +681,7 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 					}
 				    }
 				}
-				VL_WRITEF("%x :%x %s x%2#, %10#(x%2#)\n",
+				VL_WRITEF("%x :%x %s x%2#, %11d(x%2#)\n",
 					  32,__Vtask_top__DOT__decoding__1__address,
 					  32,__Vtask_top__DOT__decoding__1__input_bin,
 					  64,__Vtask_top__DOT__decoding__1__decoded_instruction,
@@ -728,7 +728,7 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 					    }
 					}
 				    }
-				    VL_WRITEF("%x :%x %s x%2#, x%2#, %10#\n",
+				    VL_WRITEF("%x :%x %s x%2#, x%2#, %11d\n",
 					      32,__Vtask_top__DOT__decoding__1__address,
 					      32,__Vtask_top__DOT__decoding__1__input_bin,
 					      64,__Vtask_top__DOT__decoding__1__decoded_instruction,
@@ -743,7 +743,7 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 					    = (0xfffff000U 
 					       & __Vtask_top__DOT__decoding__1__input_bin);
 					__Vtask_top__DOT__decoding__1__decoded_instruction = VL_ULL(0x4c5549);
-					VL_WRITEF("%x :%x      LUI x%2#, %10#\n",
+					VL_WRITEF("%x :%x      LUI x%2#, %11d\n",
 						  32,
 						  __Vtask_top__DOT__decoding__1__address,
 						  32,
@@ -759,7 +759,7 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 						= (0xfffff000U 
 						   & __Vtask_top__DOT__decoding__1__input_bin);
 					    __Vtask_top__DOT__decoding__1__decoded_instruction = VL_ULL(0x4155495043);
-					    VL_WRITEF("%x :%x    AUIPC x%2#, %10#\n",
+					    VL_WRITEF("%x :%x    AUIPC x%2#, %11d\n",
 						      32,
 						      __Vtask_top__DOT__decoding__1__address,
 						      32,
@@ -789,7 +789,7 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 							       & (__Vtask_top__DOT__decoding__1__input_bin 
 								  >> 0x14U))))));
 					    __Vtask_top__DOT__decoding__1__decoded_instruction = VL_ULL(0x4a414c);
-					    VL_WRITEF("%x :%x      JAL x%2#, %10#\n",
+					    VL_WRITEF("%x :%x      JAL x%2#, %11d\n",
 						      32,
 						      __Vtask_top__DOT__decoding__1__address,
 						      32,
@@ -807,7 +807,7 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 		}
 	    } else {
 		if (VL_UNLIKELY((0x67U == (IData)(__Vtask_top__DOT__decoding__1__opcode)))) {
-		    VL_WRITEF("%x :%x     JALR x%2#, x%2#, %10#\n",
+		    VL_WRITEF("%x :%x     JALR x%2#, x%2#, %11d\n",
 			      32,__Vtask_top__DOT__decoding__1__address,
 			      32,__Vtask_top__DOT__decoding__1__input_bin,
 			      5,(IData)(__Vtask_top__DOT__decoding__1__rd),
@@ -827,7 +827,7 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 				}
 			    }
 			}
-			VL_WRITEF("%x :%x %s x%2#, %10#(x%2#)\n",
+			VL_WRITEF("%x :%x %s x%2#, %11d(x%2#)\n",
 				  32,__Vtask_top__DOT__decoding__1__address,
 				  32,__Vtask_top__DOT__decoding__1__input_bin,
 				  64,__Vtask_top__DOT__decoding__1__decoded_instruction,
@@ -842,9 +842,9 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
     vlTOPp->top__DOT__fetched_instr = __Vdly__top__DOT__fetched_instr;
     vlTOPp->m_axi_arvalid = __Vdly__m_axi_arvalid;
     vlTOPp->m_axi_rready = __Vdly__m_axi_rready;
-    // ALWAYS at top.sv:184
+    // ALWAYS at top.sv:175
     vlTOPp->top__DOT__display_addr = vlTOPp->top__DOT__next_display_addr;
-    // ALWAYS at top.sv:178
+    // ALWAYS at top.sv:169
     if (vlTOPp->reset) {
 	vlTOPp->top__DOT__pc = vlTOPp->entry;
 	vlTOPp->top__DOT__state = 0U;
