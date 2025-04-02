@@ -1,5 +1,5 @@
 `include "Sysbus.defs"
-//`include "top.sv"
+//`include "decode.sv"
 
 module top
 #(
@@ -187,10 +187,19 @@ end
 
 function decoding([31:0] address, [31:0] input_bin);
    reg [7:11] rd;        // Destination register
+   reg [4:0] rs1, rs2;
+   reg [31:0] imm;
    reg [6:0] opcode;    // Opcode
    reg [2:0] funct3;    // Function field
    reg [6:0] funct7;    // Function field (for R-type)
    reg [63:0] decoded_instruction; // Human-readable decoded instruction
+   
+//    string reg_names [0:31] = { 
+//     "zero", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
+//     "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5", 
+//     "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7", 
+//     "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
+//     };
 
 
    // Internal registers
@@ -204,7 +213,10 @@ function decoding([31:0] address, [31:0] input_bin);
        rd = input_bin[11:7];         // Destination register is bits [11:7]
        funct3 = input_bin[14:12];    // Function3 is bits [14:12]
        funct7 = input_bin[31:25];    // Function7 is bits [31:25] (only for R-type)
-    
+       rs1 = input_bin[19:15]; // Source Register 1
+       rs2 = input_bin[24:20]; // Source Register 2
+       imm = input_bin[31:20]; // Immediate Value (for I-type)
+       
 
        case (opcode)
            // R-Type Instructions (opcode: 0110011)
@@ -227,12 +239,13 @@ function decoding([31:0] address, [31:0] input_bin);
                            decoded_instruction = "SRA";
                    end
                endcase
-               $display("%x :%h %s %d", address, input_bin, decoded_instruction, rd);
+               $display("%x :%h %s x%d, x%d, x%d", address, input_bin, decoded_instruction, rd, rs1, rs2);
            end
 
 
            // I-Type Instructions (opcode: 0010011 for arithmetic, 0000011 for loads)
            7'b0010011: begin
+               imm = {{20{input_bin[31]}}, input_bin[31:20]};
                case (funct3)
                    3'b000: decoded_instruction = "ADDI"; // ADDI
                    3'b111: decoded_instruction = "ANDI"; // ANDI
@@ -247,7 +260,7 @@ function decoding([31:0] address, [31:0] input_bin);
                            decoded_instruction = "SRAI"; // SRAI
                    end
                endcase
-               $display("%x :%h %s %d", address, input_bin, decoded_instruction, rd);
+               $display("%x :%h %s x%d, x%d, %d", address, input_bin, decoded_instruction, rd, rs1, imm);
            end
 
 
@@ -263,56 +276,61 @@ function decoding([31:0] address, [31:0] input_bin);
                            decoded_instruction = "SRAIW"; // SRAIW
                    end
                endcase
-               $display("%x :%h %s %d", address, input_bin, decoded_instruction, rd);
+               $display("%x :%h %s x%d, x%d, %d", address, input_bin, decoded_instruction, rd, rs1, imm);
            end
 
 
            // S-Type Instructions (opcode: 0100011) // NO RD
            7'b0100011: begin
+               imm = {{20{input_bin[31]}}, input_bin[31:25], input_bin[11:7]};
                case (funct3)
                    3'b000: decoded_instruction = "SB";  // Store byte
                    3'b001: decoded_instruction = "SH";  // Store halfword
                    3'b010: decoded_instruction = "SW";  // Store word
                    3'b011: decoded_instruction = "SD";  // Store doubleword (64-bit store)
                endcase
-               $display("%x :%h %s", address, input_bin, decoded_instruction);
+               $display("%x :%h %s x%d, %d(x%d)", address, input_bin, decoded_instruction, rs2, imm, rs1);
            end
 
 
            // B-Type Instructions (opcode: 1100011) // NO RD
            7'b1100011: begin
+               imm = {{19{input_bin[31]}}, input_bin[31], input_bin[7], input_bin[30:25], input_bin[11:8], 1'b0}; 
                case (funct3)
                    3'b000: decoded_instruction = "BEQ";  // Branch if equal
                    3'b001: decoded_instruction = "BNE";  // Branch if not equal
                    3'b100: decoded_instruction = "BLT";  // Branch if less than
                    3'b101: decoded_instruction = "BGE";  // Branch if greater or equal
                endcase
-               $display("%x :%h %s", address, input_bin, decoded_instruction);
+               $display("%x :%h %s x%d, x%d, %d", address, input_bin, decoded_instruction, rs1, rs2, imm);
            end
 
 
            // U-Type Instructions (opcode: 0110111 for LUI, 0010111 for AUIPC)
            7'b0110111: begin
+               imm = {input_bin[31:12], 12'b0}; 
                decoded_instruction = "LUI";  // Load upper immediate
-               $display("%x :%h %s %d", address, input_bin, decoded_instruction, rd);
+               $display("%x :%h %s x%d, %d", address, input_bin, decoded_instruction, rd, imm);
            end
            7'b0010111: begin
+               imm = {input_bin[31:12], 12'b0}; 
                decoded_instruction = "AUIPC";  // Add upper immediate to PC
-               $display("%x :%h %s %d", address, input_bin, decoded_instruction, rd);
+               $display("%x :%h %s x%d, %d", address, input_bin, decoded_instruction, rd, imm);
            end
 
 
            // J-Type Instructions (opcode: 1101111)
            7'b1101111: begin
+               imm = {{11{input_bin[31]}}, input_bin[31], input_bin[19:12], input_bin[20], input_bin[30:21], 1'b0};
                decoded_instruction = "JAL";  // Jump and link
-               $display("%x :%h %s %d", address, input_bin, decoded_instruction, rd);
+               $display("%x :%h %s x%d, %d", address, input_bin, decoded_instruction, rd, imm);
            end
 
 
            // JALR (I-Type for jumps, opcode: 1100111)
            7'b1100111: begin
                decoded_instruction = "JALR";  // Jump and link register
-               $display("%x :%h %s %d", address, input_bin, decoded_instruction, rd);
+               $display("%x :%h %s x%d, x%d, %d", address, input_bin, decoded_instruction, rd, rs1, imm);
            end
 
 
@@ -323,7 +341,7 @@ function decoding([31:0] address, [31:0] input_bin);
                    3'b010: decoded_instruction = "LW";  // Load word
                    3'b100: decoded_instruction = "LBU"; // LBU
                endcase
-               $display("%x :%h %s %d", address, input_bin, decoded_instruction, rd);
+               $display("%x :%h %s x%d, %d(x%d)", address, input_bin, decoded_instruction, rd, imm, rs1);
            end
        endcase
    end

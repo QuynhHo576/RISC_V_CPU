@@ -74,7 +74,7 @@ void Vtop::_initial__TOP__1(Vtop__Syms* __restrict vlSymsp) {
     VL_DEBUG_IF(VL_PRINTF("    Vtop::_initial__TOP__1\n"); );
     Vtop* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
-    // INITIAL at top.sv:334
+    // INITIAL at top.sv:352
     VL_WRITEF("Initializing top, entry point = 0x%x\n",
 	      64,vlTOPp->entry);
 }
@@ -84,21 +84,26 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
     Vtop* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Variables
     VL_SIG8(__Vtask_top__DOT__decoding__0__rd,11,7);
+    VL_SIG8(__Vtask_top__DOT__decoding__0__rs1,4,0);
+    VL_SIG8(__Vtask_top__DOT__decoding__0__rs2,4,0);
     VL_SIG8(__Vtask_top__DOT__decoding__0__opcode,6,0);
     VL_SIG8(__Vtask_top__DOT__decoding__0__funct3,2,0);
     VL_SIG8(__Vtask_top__DOT__decoding__0__funct7,6,0);
     VL_SIG8(__Vtask_top__DOT__decoding__1__rd,11,7);
+    VL_SIG8(__Vtask_top__DOT__decoding__1__rs1,4,0);
+    VL_SIG8(__Vtask_top__DOT__decoding__1__rs2,4,0);
     VL_SIG8(__Vtask_top__DOT__decoding__1__opcode,6,0);
     VL_SIG8(__Vtask_top__DOT__decoding__1__funct3,2,0);
     VL_SIG8(__Vtask_top__DOT__decoding__1__funct7,6,0);
     VL_SIG8(__Vdly__m_axi_arvalid,0,0);
     VL_SIG8(__Vdly__m_axi_rready,0,0);
-    //char	__VpadToAlign34[2];
+    //char	__VpadToAlign38[2];
     VL_SIG(__Vtask_top__DOT__decoding__0__address,31,0);
     VL_SIG(__Vtask_top__DOT__decoding__0__input_bin,31,0);
+    VL_SIG(__Vtask_top__DOT__decoding__0__imm,31,0);
     VL_SIG(__Vtask_top__DOT__decoding__1__address,31,0);
     VL_SIG(__Vtask_top__DOT__decoding__1__input_bin,31,0);
-    //char	__VpadToAlign52[4];
+    VL_SIG(__Vtask_top__DOT__decoding__1__imm,31,0);
     VL_SIG64(__Vtask_top__DOT__decoding__0__decoded_instruction,63,0);
     VL_SIG64(__Vtask_top__DOT__decoding__1__decoded_instruction,63,0);
     VL_SIG64(__Vdly__top__DOT__fetched_instr,63,0);
@@ -146,6 +151,15 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 	    __Vtask_top__DOT__decoding__0__funct7 = 
 		(0x7fU & (__Vtask_top__DOT__decoding__0__input_bin 
 			  >> 0x19U));
+	    __Vtask_top__DOT__decoding__0__rs1 = (0x1fU 
+						  & (__Vtask_top__DOT__decoding__0__input_bin 
+						     >> 0xfU));
+	    __Vtask_top__DOT__decoding__0__rs2 = (0x1fU 
+						  & (__Vtask_top__DOT__decoding__0__input_bin 
+						     >> 0x14U));
+	    __Vtask_top__DOT__decoding__0__imm = (0xfffU 
+						  & (__Vtask_top__DOT__decoding__0__input_bin 
+						     >> 0x14U));
 	    if (((((((((0x33U == (IData)(__Vtask_top__DOT__decoding__0__opcode)) 
 		       | (0x13U == (IData)(__Vtask_top__DOT__decoding__0__opcode))) 
 		      | (0x1bU == (IData)(__Vtask_top__DOT__decoding__0__opcode))) 
@@ -193,13 +207,23 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 			    }
 			}
 		    }
-		    VL_WRITEF("%x :%x %s %2#\n",32,
-			      __Vtask_top__DOT__decoding__0__address,
+		    VL_WRITEF("%x :%x %s x%2#, x%2#, x%2#\n",
+			      32,__Vtask_top__DOT__decoding__0__address,
 			      32,__Vtask_top__DOT__decoding__0__input_bin,
 			      64,__Vtask_top__DOT__decoding__0__decoded_instruction,
-			      5,(IData)(__Vtask_top__DOT__decoding__0__rd));
+			      5,(IData)(__Vtask_top__DOT__decoding__0__rd),
+			      5,__Vtask_top__DOT__decoding__0__rs1,
+			      5,(IData)(__Vtask_top__DOT__decoding__0__rs2));
 		} else {
 		    if (VL_UNLIKELY((0x13U == (IData)(__Vtask_top__DOT__decoding__0__opcode)))) {
+			__Vtask_top__DOT__decoding__0__imm 
+			    = ((0xfffff000U & (VL_NEGATE_I((IData)(
+								   (1U 
+								    & (__Vtask_top__DOT__decoding__0__input_bin 
+								       >> 0x1fU)))) 
+					       << 0xcU)) 
+			       | (0xfffU & (__Vtask_top__DOT__decoding__0__input_bin 
+					    >> 0x14U)));
 			if ((0U == (IData)(__Vtask_top__DOT__decoding__0__funct3))) {
 			    __Vtask_top__DOT__decoding__0__decoded_instruction = VL_ULL(0x41444449);
 			} else {
@@ -240,11 +264,13 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 				}
 			    }
 			}
-			VL_WRITEF("%x :%x %s %2#\n",
+			VL_WRITEF("%x :%x %s x%2#, x%2#, %10#\n",
 				  32,__Vtask_top__DOT__decoding__0__address,
 				  32,__Vtask_top__DOT__decoding__0__input_bin,
 				  64,__Vtask_top__DOT__decoding__0__decoded_instruction,
-				  5,(IData)(__Vtask_top__DOT__decoding__0__rd));
+				  5,(IData)(__Vtask_top__DOT__decoding__0__rd),
+				  5,__Vtask_top__DOT__decoding__0__rs1,
+				  32,__Vtask_top__DOT__decoding__0__imm);
 		    } else {
 			if (VL_UNLIKELY((0x1bU == (IData)(__Vtask_top__DOT__decoding__0__opcode)))) {
 			    if ((0U == (IData)(__Vtask_top__DOT__decoding__0__funct3))) {
@@ -265,14 +291,29 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 				    }
 				}
 			    }
-			    VL_WRITEF("%x :%x %s %2#\n",
+			    VL_WRITEF("%x :%x %s x%2#, x%2#, %10#\n",
 				      32,__Vtask_top__DOT__decoding__0__address,
 				      32,__Vtask_top__DOT__decoding__0__input_bin,
 				      64,__Vtask_top__DOT__decoding__0__decoded_instruction,
-				      5,(IData)(__Vtask_top__DOT__decoding__0__rd));
+				      5,(IData)(__Vtask_top__DOT__decoding__0__rd),
+				      5,__Vtask_top__DOT__decoding__0__rs1,
+				      32,__Vtask_top__DOT__decoding__0__imm);
 			} else {
 			    if (VL_UNLIKELY((0x23U 
 					     == (IData)(__Vtask_top__DOT__decoding__0__opcode)))) {
+				__Vtask_top__DOT__decoding__0__imm 
+				    = ((0xfffff000U 
+					& (VL_NEGATE_I((IData)(
+							       (1U 
+								& (__Vtask_top__DOT__decoding__0__input_bin 
+								   >> 0x1fU)))) 
+					   << 0xcU)) 
+				       | ((0xfe0U & 
+					   (__Vtask_top__DOT__decoding__0__input_bin 
+					    >> 0x14U)) 
+					  | (0x1fU 
+					     & (__Vtask_top__DOT__decoding__0__input_bin 
+						>> 7U))));
 				if ((0U == (IData)(__Vtask_top__DOT__decoding__0__funct3))) {
 				    __Vtask_top__DOT__decoding__0__decoded_instruction = VL_ULL(0x5342);
 				} else {
@@ -289,13 +330,35 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 					}
 				    }
 				}
-				VL_WRITEF("%x :%x %s\n",
+				VL_WRITEF("%x :%x %s x%2#, %10#(x%2#)\n",
 					  32,__Vtask_top__DOT__decoding__0__address,
 					  32,__Vtask_top__DOT__decoding__0__input_bin,
-					  64,__Vtask_top__DOT__decoding__0__decoded_instruction);
+					  64,__Vtask_top__DOT__decoding__0__decoded_instruction,
+					  5,(IData)(__Vtask_top__DOT__decoding__0__rs2),
+					  32,__Vtask_top__DOT__decoding__0__imm,
+					  5,(IData)(__Vtask_top__DOT__decoding__0__rs1));
 			    } else {
 				if (VL_UNLIKELY((0x63U 
 						 == (IData)(__Vtask_top__DOT__decoding__0__opcode)))) {
+				    __Vtask_top__DOT__decoding__0__imm 
+					= ((0xffffe000U 
+					    & (VL_NEGATE_I((IData)(
+								   (1U 
+								    & (__Vtask_top__DOT__decoding__0__input_bin 
+								       >> 0x1fU)))) 
+					       << 0xdU)) 
+					   | ((0x1000U 
+					       & (__Vtask_top__DOT__decoding__0__input_bin 
+						  >> 0x13U)) 
+					      | ((0x800U 
+						  & (__Vtask_top__DOT__decoding__0__input_bin 
+						     << 4U)) 
+						 | ((0x7e0U 
+						     & (__Vtask_top__DOT__decoding__0__input_bin 
+							>> 0x14U)) 
+						    | (0x1eU 
+						       & (__Vtask_top__DOT__decoding__0__input_bin 
+							  >> 7U))))));
 				    if ((0U == (IData)(__Vtask_top__DOT__decoding__0__funct3))) {
 					__Vtask_top__DOT__decoding__0__decoded_instruction = VL_ULL(0x424551);
 				    } else {
@@ -314,42 +377,76 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 					    }
 					}
 				    }
-				    VL_WRITEF("%x :%x %s\n",
+				    VL_WRITEF("%x :%x %s x%2#, x%2#, %10#\n",
 					      32,__Vtask_top__DOT__decoding__0__address,
 					      32,__Vtask_top__DOT__decoding__0__input_bin,
-					      64,__Vtask_top__DOT__decoding__0__decoded_instruction);
+					      64,__Vtask_top__DOT__decoding__0__decoded_instruction,
+					      5,(IData)(__Vtask_top__DOT__decoding__0__rs1),
+					      5,__Vtask_top__DOT__decoding__0__rs2,
+					      32,__Vtask_top__DOT__decoding__0__imm);
 				} else {
 				    if (VL_UNLIKELY(
 						    (0x37U 
 						     == (IData)(__Vtask_top__DOT__decoding__0__opcode)))) {
-					VL_WRITEF("%x :%x      LUI %2#\n",
+					__Vtask_top__DOT__decoding__0__imm 
+					    = (0xfffff000U 
+					       & __Vtask_top__DOT__decoding__0__input_bin);
+					__Vtask_top__DOT__decoding__0__decoded_instruction = VL_ULL(0x4c5549);
+					VL_WRITEF("%x :%x      LUI x%2#, %10#\n",
 						  32,
 						  __Vtask_top__DOT__decoding__0__address,
 						  32,
 						  __Vtask_top__DOT__decoding__0__input_bin,
 						  5,
-						  (IData)(__Vtask_top__DOT__decoding__0__rd));
-					__Vtask_top__DOT__decoding__0__decoded_instruction = VL_ULL(0x4c5549);
+						  (IData)(__Vtask_top__DOT__decoding__0__rd),
+						  32,
+						  __Vtask_top__DOT__decoding__0__imm);
 				    } else {
 					if ((0x17U 
 					     == (IData)(__Vtask_top__DOT__decoding__0__opcode))) {
-					    VL_WRITEF("%x :%x    AUIPC %2#\n",
-						      32,
-						      __Vtask_top__DOT__decoding__0__address,
-						      32,
-						      __Vtask_top__DOT__decoding__0__input_bin,
-						      5,
-						      (IData)(__Vtask_top__DOT__decoding__0__rd));
+					    __Vtask_top__DOT__decoding__0__imm 
+						= (0xfffff000U 
+						   & __Vtask_top__DOT__decoding__0__input_bin);
 					    __Vtask_top__DOT__decoding__0__decoded_instruction = VL_ULL(0x4155495043);
-					} else {
-					    VL_WRITEF("%x :%x      JAL %2#\n",
+					    VL_WRITEF("%x :%x    AUIPC x%2#, %10#\n",
 						      32,
 						      __Vtask_top__DOT__decoding__0__address,
 						      32,
 						      __Vtask_top__DOT__decoding__0__input_bin,
 						      5,
-						      (IData)(__Vtask_top__DOT__decoding__0__rd));
+						      (IData)(__Vtask_top__DOT__decoding__0__rd),
+						      32,
+						      __Vtask_top__DOT__decoding__0__imm);
+					} else {
+					    __Vtask_top__DOT__decoding__0__imm 
+						= (
+						   (0xffe00000U 
+						    & (VL_NEGATE_I((IData)(
+									   (1U 
+									    & (__Vtask_top__DOT__decoding__0__input_bin 
+									       >> 0x1fU)))) 
+						       << 0x15U)) 
+						   | ((0x100000U 
+						       & (__Vtask_top__DOT__decoding__0__input_bin 
+							  >> 0xbU)) 
+						      | ((0xff000U 
+							  & __Vtask_top__DOT__decoding__0__input_bin) 
+							 | ((0x800U 
+							     & (__Vtask_top__DOT__decoding__0__input_bin 
+								>> 9U)) 
+							    | (0x7feU 
+							       & (__Vtask_top__DOT__decoding__0__input_bin 
+								  >> 0x14U))))));
 					    __Vtask_top__DOT__decoding__0__decoded_instruction = VL_ULL(0x4a414c);
+					    VL_WRITEF("%x :%x      JAL x%2#, %10#\n",
+						      32,
+						      __Vtask_top__DOT__decoding__0__address,
+						      32,
+						      __Vtask_top__DOT__decoding__0__input_bin,
+						      5,
+						      (IData)(__Vtask_top__DOT__decoding__0__rd),
+						      32,
+						      __Vtask_top__DOT__decoding__0__imm);
 					}
 				    }
 				}
@@ -359,10 +456,12 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 		}
 	    } else {
 		if (VL_UNLIKELY((0x67U == (IData)(__Vtask_top__DOT__decoding__0__opcode)))) {
-		    VL_WRITEF("%x :%x     JALR %2#\n",
+		    VL_WRITEF("%x :%x     JALR x%2#, x%2#, %10#\n",
 			      32,__Vtask_top__DOT__decoding__0__address,
 			      32,__Vtask_top__DOT__decoding__0__input_bin,
-			      5,(IData)(__Vtask_top__DOT__decoding__0__rd));
+			      5,(IData)(__Vtask_top__DOT__decoding__0__rd),
+			      5,__Vtask_top__DOT__decoding__0__rs1,
+			      32,__Vtask_top__DOT__decoding__0__imm);
 		    __Vtask_top__DOT__decoding__0__decoded_instruction = VL_ULL(0x4a414c52);
 		} else {
 		    if (VL_UNLIKELY((3U == (IData)(__Vtask_top__DOT__decoding__0__opcode)))) {
@@ -377,11 +476,13 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 				}
 			    }
 			}
-			VL_WRITEF("%x :%x %s %2#\n",
+			VL_WRITEF("%x :%x %s x%2#, %10#(x%2#)\n",
 				  32,__Vtask_top__DOT__decoding__0__address,
 				  32,__Vtask_top__DOT__decoding__0__input_bin,
 				  64,__Vtask_top__DOT__decoding__0__decoded_instruction,
-				  5,(IData)(__Vtask_top__DOT__decoding__0__rd));
+				  5,(IData)(__Vtask_top__DOT__decoding__0__rd),
+				  32,__Vtask_top__DOT__decoding__0__imm,
+				  5,(IData)(__Vtask_top__DOT__decoding__0__rs1));
 		    }
 		}
 	    }
@@ -401,6 +502,15 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 	    __Vtask_top__DOT__decoding__1__funct7 = 
 		(0x7fU & (__Vtask_top__DOT__decoding__1__input_bin 
 			  >> 0x19U));
+	    __Vtask_top__DOT__decoding__1__rs1 = (0x1fU 
+						  & (__Vtask_top__DOT__decoding__1__input_bin 
+						     >> 0xfU));
+	    __Vtask_top__DOT__decoding__1__rs2 = (0x1fU 
+						  & (__Vtask_top__DOT__decoding__1__input_bin 
+						     >> 0x14U));
+	    __Vtask_top__DOT__decoding__1__imm = (0xfffU 
+						  & (__Vtask_top__DOT__decoding__1__input_bin 
+						     >> 0x14U));
 	    if (((((((((0x33U == (IData)(__Vtask_top__DOT__decoding__1__opcode)) 
 		       | (0x13U == (IData)(__Vtask_top__DOT__decoding__1__opcode))) 
 		      | (0x1bU == (IData)(__Vtask_top__DOT__decoding__1__opcode))) 
@@ -448,13 +558,23 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 			    }
 			}
 		    }
-		    VL_WRITEF("%x :%x %s %2#\n",32,
-			      __Vtask_top__DOT__decoding__1__address,
+		    VL_WRITEF("%x :%x %s x%2#, x%2#, x%2#\n",
+			      32,__Vtask_top__DOT__decoding__1__address,
 			      32,__Vtask_top__DOT__decoding__1__input_bin,
 			      64,__Vtask_top__DOT__decoding__1__decoded_instruction,
-			      5,(IData)(__Vtask_top__DOT__decoding__1__rd));
+			      5,(IData)(__Vtask_top__DOT__decoding__1__rd),
+			      5,__Vtask_top__DOT__decoding__1__rs1,
+			      5,(IData)(__Vtask_top__DOT__decoding__1__rs2));
 		} else {
 		    if (VL_UNLIKELY((0x13U == (IData)(__Vtask_top__DOT__decoding__1__opcode)))) {
+			__Vtask_top__DOT__decoding__1__imm 
+			    = ((0xfffff000U & (VL_NEGATE_I((IData)(
+								   (1U 
+								    & (__Vtask_top__DOT__decoding__1__input_bin 
+								       >> 0x1fU)))) 
+					       << 0xcU)) 
+			       | (0xfffU & (__Vtask_top__DOT__decoding__1__input_bin 
+					    >> 0x14U)));
 			if ((0U == (IData)(__Vtask_top__DOT__decoding__1__funct3))) {
 			    __Vtask_top__DOT__decoding__1__decoded_instruction = VL_ULL(0x41444449);
 			} else {
@@ -495,11 +615,13 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 				}
 			    }
 			}
-			VL_WRITEF("%x :%x %s %2#\n",
+			VL_WRITEF("%x :%x %s x%2#, x%2#, %10#\n",
 				  32,__Vtask_top__DOT__decoding__1__address,
 				  32,__Vtask_top__DOT__decoding__1__input_bin,
 				  64,__Vtask_top__DOT__decoding__1__decoded_instruction,
-				  5,(IData)(__Vtask_top__DOT__decoding__1__rd));
+				  5,(IData)(__Vtask_top__DOT__decoding__1__rd),
+				  5,__Vtask_top__DOT__decoding__1__rs1,
+				  32,__Vtask_top__DOT__decoding__1__imm);
 		    } else {
 			if (VL_UNLIKELY((0x1bU == (IData)(__Vtask_top__DOT__decoding__1__opcode)))) {
 			    if ((0U == (IData)(__Vtask_top__DOT__decoding__1__funct3))) {
@@ -520,14 +642,29 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 				    }
 				}
 			    }
-			    VL_WRITEF("%x :%x %s %2#\n",
+			    VL_WRITEF("%x :%x %s x%2#, x%2#, %10#\n",
 				      32,__Vtask_top__DOT__decoding__1__address,
 				      32,__Vtask_top__DOT__decoding__1__input_bin,
 				      64,__Vtask_top__DOT__decoding__1__decoded_instruction,
-				      5,(IData)(__Vtask_top__DOT__decoding__1__rd));
+				      5,(IData)(__Vtask_top__DOT__decoding__1__rd),
+				      5,__Vtask_top__DOT__decoding__1__rs1,
+				      32,__Vtask_top__DOT__decoding__1__imm);
 			} else {
 			    if (VL_UNLIKELY((0x23U 
 					     == (IData)(__Vtask_top__DOT__decoding__1__opcode)))) {
+				__Vtask_top__DOT__decoding__1__imm 
+				    = ((0xfffff000U 
+					& (VL_NEGATE_I((IData)(
+							       (1U 
+								& (__Vtask_top__DOT__decoding__1__input_bin 
+								   >> 0x1fU)))) 
+					   << 0xcU)) 
+				       | ((0xfe0U & 
+					   (__Vtask_top__DOT__decoding__1__input_bin 
+					    >> 0x14U)) 
+					  | (0x1fU 
+					     & (__Vtask_top__DOT__decoding__1__input_bin 
+						>> 7U))));
 				if ((0U == (IData)(__Vtask_top__DOT__decoding__1__funct3))) {
 				    __Vtask_top__DOT__decoding__1__decoded_instruction = VL_ULL(0x5342);
 				} else {
@@ -544,13 +681,35 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 					}
 				    }
 				}
-				VL_WRITEF("%x :%x %s\n",
+				VL_WRITEF("%x :%x %s x%2#, %10#(x%2#)\n",
 					  32,__Vtask_top__DOT__decoding__1__address,
 					  32,__Vtask_top__DOT__decoding__1__input_bin,
-					  64,__Vtask_top__DOT__decoding__1__decoded_instruction);
+					  64,__Vtask_top__DOT__decoding__1__decoded_instruction,
+					  5,(IData)(__Vtask_top__DOT__decoding__1__rs2),
+					  32,__Vtask_top__DOT__decoding__1__imm,
+					  5,(IData)(__Vtask_top__DOT__decoding__1__rs1));
 			    } else {
 				if (VL_UNLIKELY((0x63U 
 						 == (IData)(__Vtask_top__DOT__decoding__1__opcode)))) {
+				    __Vtask_top__DOT__decoding__1__imm 
+					= ((0xffffe000U 
+					    & (VL_NEGATE_I((IData)(
+								   (1U 
+								    & (__Vtask_top__DOT__decoding__1__input_bin 
+								       >> 0x1fU)))) 
+					       << 0xdU)) 
+					   | ((0x1000U 
+					       & (__Vtask_top__DOT__decoding__1__input_bin 
+						  >> 0x13U)) 
+					      | ((0x800U 
+						  & (__Vtask_top__DOT__decoding__1__input_bin 
+						     << 4U)) 
+						 | ((0x7e0U 
+						     & (__Vtask_top__DOT__decoding__1__input_bin 
+							>> 0x14U)) 
+						    | (0x1eU 
+						       & (__Vtask_top__DOT__decoding__1__input_bin 
+							  >> 7U))))));
 				    if ((0U == (IData)(__Vtask_top__DOT__decoding__1__funct3))) {
 					__Vtask_top__DOT__decoding__1__decoded_instruction = VL_ULL(0x424551);
 				    } else {
@@ -569,42 +728,76 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 					    }
 					}
 				    }
-				    VL_WRITEF("%x :%x %s\n",
+				    VL_WRITEF("%x :%x %s x%2#, x%2#, %10#\n",
 					      32,__Vtask_top__DOT__decoding__1__address,
 					      32,__Vtask_top__DOT__decoding__1__input_bin,
-					      64,__Vtask_top__DOT__decoding__1__decoded_instruction);
+					      64,__Vtask_top__DOT__decoding__1__decoded_instruction,
+					      5,(IData)(__Vtask_top__DOT__decoding__1__rs1),
+					      5,__Vtask_top__DOT__decoding__1__rs2,
+					      32,__Vtask_top__DOT__decoding__1__imm);
 				} else {
 				    if (VL_UNLIKELY(
 						    (0x37U 
 						     == (IData)(__Vtask_top__DOT__decoding__1__opcode)))) {
-					VL_WRITEF("%x :%x      LUI %2#\n",
+					__Vtask_top__DOT__decoding__1__imm 
+					    = (0xfffff000U 
+					       & __Vtask_top__DOT__decoding__1__input_bin);
+					__Vtask_top__DOT__decoding__1__decoded_instruction = VL_ULL(0x4c5549);
+					VL_WRITEF("%x :%x      LUI x%2#, %10#\n",
 						  32,
 						  __Vtask_top__DOT__decoding__1__address,
 						  32,
 						  __Vtask_top__DOT__decoding__1__input_bin,
 						  5,
-						  (IData)(__Vtask_top__DOT__decoding__1__rd));
-					__Vtask_top__DOT__decoding__1__decoded_instruction = VL_ULL(0x4c5549);
+						  (IData)(__Vtask_top__DOT__decoding__1__rd),
+						  32,
+						  __Vtask_top__DOT__decoding__1__imm);
 				    } else {
 					if ((0x17U 
 					     == (IData)(__Vtask_top__DOT__decoding__1__opcode))) {
-					    VL_WRITEF("%x :%x    AUIPC %2#\n",
-						      32,
-						      __Vtask_top__DOT__decoding__1__address,
-						      32,
-						      __Vtask_top__DOT__decoding__1__input_bin,
-						      5,
-						      (IData)(__Vtask_top__DOT__decoding__1__rd));
+					    __Vtask_top__DOT__decoding__1__imm 
+						= (0xfffff000U 
+						   & __Vtask_top__DOT__decoding__1__input_bin);
 					    __Vtask_top__DOT__decoding__1__decoded_instruction = VL_ULL(0x4155495043);
-					} else {
-					    VL_WRITEF("%x :%x      JAL %2#\n",
+					    VL_WRITEF("%x :%x    AUIPC x%2#, %10#\n",
 						      32,
 						      __Vtask_top__DOT__decoding__1__address,
 						      32,
 						      __Vtask_top__DOT__decoding__1__input_bin,
 						      5,
-						      (IData)(__Vtask_top__DOT__decoding__1__rd));
+						      (IData)(__Vtask_top__DOT__decoding__1__rd),
+						      32,
+						      __Vtask_top__DOT__decoding__1__imm);
+					} else {
+					    __Vtask_top__DOT__decoding__1__imm 
+						= (
+						   (0xffe00000U 
+						    & (VL_NEGATE_I((IData)(
+									   (1U 
+									    & (__Vtask_top__DOT__decoding__1__input_bin 
+									       >> 0x1fU)))) 
+						       << 0x15U)) 
+						   | ((0x100000U 
+						       & (__Vtask_top__DOT__decoding__1__input_bin 
+							  >> 0xbU)) 
+						      | ((0xff000U 
+							  & __Vtask_top__DOT__decoding__1__input_bin) 
+							 | ((0x800U 
+							     & (__Vtask_top__DOT__decoding__1__input_bin 
+								>> 9U)) 
+							    | (0x7feU 
+							       & (__Vtask_top__DOT__decoding__1__input_bin 
+								  >> 0x14U))))));
 					    __Vtask_top__DOT__decoding__1__decoded_instruction = VL_ULL(0x4a414c);
+					    VL_WRITEF("%x :%x      JAL x%2#, %10#\n",
+						      32,
+						      __Vtask_top__DOT__decoding__1__address,
+						      32,
+						      __Vtask_top__DOT__decoding__1__input_bin,
+						      5,
+						      (IData)(__Vtask_top__DOT__decoding__1__rd),
+						      32,
+						      __Vtask_top__DOT__decoding__1__imm);
 					}
 				    }
 				}
@@ -614,10 +807,12 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 		}
 	    } else {
 		if (VL_UNLIKELY((0x67U == (IData)(__Vtask_top__DOT__decoding__1__opcode)))) {
-		    VL_WRITEF("%x :%x     JALR %2#\n",
+		    VL_WRITEF("%x :%x     JALR x%2#, x%2#, %10#\n",
 			      32,__Vtask_top__DOT__decoding__1__address,
 			      32,__Vtask_top__DOT__decoding__1__input_bin,
-			      5,(IData)(__Vtask_top__DOT__decoding__1__rd));
+			      5,(IData)(__Vtask_top__DOT__decoding__1__rd),
+			      5,__Vtask_top__DOT__decoding__1__rs1,
+			      32,__Vtask_top__DOT__decoding__1__imm);
 		    __Vtask_top__DOT__decoding__1__decoded_instruction = VL_ULL(0x4a414c52);
 		} else {
 		    if (VL_UNLIKELY((3U == (IData)(__Vtask_top__DOT__decoding__1__opcode)))) {
@@ -632,11 +827,13 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 				}
 			    }
 			}
-			VL_WRITEF("%x :%x %s %2#\n",
+			VL_WRITEF("%x :%x %s x%2#, %10#(x%2#)\n",
 				  32,__Vtask_top__DOT__decoding__1__address,
 				  32,__Vtask_top__DOT__decoding__1__input_bin,
 				  64,__Vtask_top__DOT__decoding__1__decoded_instruction,
-				  5,(IData)(__Vtask_top__DOT__decoding__1__rd));
+				  5,(IData)(__Vtask_top__DOT__decoding__1__rd),
+				  32,__Vtask_top__DOT__decoding__1__imm,
+				  5,(IData)(__Vtask_top__DOT__decoding__1__rs1));
 		    }
 		}
 	    }
