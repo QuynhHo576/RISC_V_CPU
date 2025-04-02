@@ -1,0 +1,182 @@
+
+/shared/cse502/tests/wp1/prog2.o:     file format elf64-littleriscv
+
+
+Disassembly of section .text:
+
+0000000000000000 <.text>:
+   0:	81010113          	addi	x2,x2,-2032
+   4:	7e113423          	sd	x1,2024(x2)
+   8:	7e813023          	sd	x8,2016(x2)
+   c:	7f010413          	addi	x8,x2,2032
+  10:	ffffe337          	lui	x6,0xffffe
+  14:	bf030313          	addi	x6,x6,-1040 # 0xffffffffffffdbf0
+  18:	00610133          	add	x2,x2,x6
+  1c:	ffffd7b7          	lui	x15,0xffffd
+  20:	ff040713          	addi	x14,x8,-16
+  24:	00f707b3          	add	x15,x14,x15
+  28:	40a7ae23          	sw	x10,1052(x15) # 0xffffffffffffd41c
+  2c:	ffffd7b7          	lui	x15,0xffffd
+  30:	ff040713          	addi	x14,x8,-16
+  34:	00f707b3          	add	x15,x14,x15
+  38:	40b7b823          	sd	x11,1040(x15) # 0xffffffffffffd410
+  3c:	fc042e23          	sw	x0,-36(x8)
+  40:	fe042623          	sw	x0,-20(x8)
+  44:	0680006f          	j	0xac
+  48:	fec42703          	lw	x14,-20(x8)
+  4c:	00070793          	mv	x15,x14
+  50:	0027979b          	slliw	x15,x15,0x2
+  54:	00e787bb          	addw	x15,x15,x14
+  58:	0017979b          	slliw	x15,x15,0x1
+  5c:	fef42623          	sw	x15,-20(x8)
+  60:	ffffd7b7          	lui	x15,0xffffd
+  64:	ff040713          	addi	x14,x8,-16
+  68:	00f707b3          	add	x15,x14,x15
+  6c:	4107b783          	ld	x15,1040(x15) # 0xffffffffffffd410
+  70:	00878793          	addi	x15,x15,8
+  74:	0007b783          	ld	x15,0(x15)
+  78:	0007c783          	lbu	x15,0(x15)
+  7c:	fd07879b          	addiw	x15,x15,-48
+  80:	fec42703          	lw	x14,-20(x8)
+  84:	00f707bb          	addw	x15,x14,x15
+  88:	fef42623          	sw	x15,-20(x8)
+  8c:	ffffd7b7          	lui	x15,0xffffd
+  90:	ff040713          	addi	x14,x8,-16
+  94:	00f707b3          	add	x15,x14,x15
+  98:	4107b783          	ld	x15,1040(x15) # 0xffffffffffffd410
+  9c:	00878793          	addi	x15,x15,8
+  a0:	0007b703          	ld	x14,0(x15)
+  a4:	00170713          	addi	x14,x14,1
+  a8:	00e7b023          	sd	x14,0(x15)
+  ac:	ffffd7b7          	lui	x15,0xffffd
+  b0:	ff040713          	addi	x14,x8,-16
+  b4:	00f707b3          	add	x15,x14,x15
+  b8:	4107b783          	ld	x15,1040(x15) # 0xffffffffffffd410
+  bc:	00878793          	addi	x15,x15,8
+  c0:	0007b783          	ld	x15,0(x15)
+  c4:	0007c783          	lbu	x15,0(x15)
+  c8:	f80790e3          	bnez	x15,0x48
+  cc:	fe042423          	sw	x0,-24(x8)
+  d0:	0300006f          	j	0x100
+  d4:	ffffd7b7          	lui	x15,0xffffd
+  d8:	ff040713          	addi	x14,x8,-16
+  dc:	00f70733          	add	x14,x14,x15
+  e0:	fe842783          	lw	x15,-24(x8)
+  e4:	00279793          	slli	x15,x15,0x2
+  e8:	00f707b3          	add	x15,x14,x15
+  ec:	7d000713          	li	x14,2000
+  f0:	42e7a023          	sw	x14,1056(x15) # 0xffffffffffffd420
+  f4:	fe842783          	lw	x15,-24(x8)
+  f8:	0017879b          	addiw	x15,x15,1
+  fc:	fef42423          	sw	x15,-24(x8)
+ 100:	fe842703          	lw	x14,-24(x8)
+ 104:	fec42783          	lw	x15,-20(x8)
+ 108:	fcf746e3          	blt	x14,x15,0xd4
+ 10c:	fec42783          	lw	x15,-20(x8)
+ 110:	fef42223          	sw	x15,-28(x8)
+ 114:	1040006f          	j	0x218
+ 118:	fe042023          	sw	x0,-32(x8)
+ 11c:	fe442783          	lw	x15,-28(x8)
+ 120:	fef42423          	sw	x15,-24(x8)
+ 124:	ffffd7b7          	lui	x15,0xffffd
+ 128:	ff040713          	addi	x14,x8,-16
+ 12c:	00f70733          	add	x14,x14,x15
+ 130:	fe842783          	lw	x15,-24(x8)
+ 134:	00279793          	slli	x15,x15,0x2
+ 138:	00f707b3          	add	x15,x14,x15
+ 13c:	4207a703          	lw	x14,1056(x15) # 0xffffffffffffd420
+ 140:	000027b7          	lui	x15,0x2
+ 144:	7107879b          	addiw	x15,x15,1808
+ 148:	02f707bb          	mulw	x15,x14,x15
+ 14c:	fe042703          	lw	x14,-32(x8)
+ 150:	00f707bb          	addw	x15,x14,x15
+ 154:	fef42023          	sw	x15,-32(x8)
+ 158:	fe842783          	lw	x15,-24(x8)
+ 15c:	0017979b          	slliw	x15,x15,0x1
+ 160:	fff7879b          	addiw	x15,x15,-1
+ 164:	fcf42c23          	sw	x15,-40(x8)
+ 168:	fe042703          	lw	x14,-32(x8)
+ 16c:	fd842783          	lw	x15,-40(x8)
+ 170:	02f7673b          	remw	x14,x14,x15
+ 174:	ffffd7b7          	lui	x15,0xffffd
+ 178:	ff040693          	addi	x13,x8,-16
+ 17c:	00f686b3          	add	x13,x13,x15
+ 180:	fe842783          	lw	x15,-24(x8)
+ 184:	00279793          	slli	x15,x15,0x2
+ 188:	00f687b3          	add	x15,x13,x15
+ 18c:	42e7a023          	sw	x14,1056(x15) # 0xffffffffffffd420
+ 190:	fe042703          	lw	x14,-32(x8)
+ 194:	fd842783          	lw	x15,-40(x8)
+ 198:	02f747bb          	divw	x15,x14,x15
+ 19c:	fef42023          	sw	x15,-32(x8)
+ 1a0:	fe842783          	lw	x15,-24(x8)
+ 1a4:	fff7879b          	addiw	x15,x15,-1
+ 1a8:	fef42423          	sw	x15,-24(x8)
+ 1ac:	fe842783          	lw	x15,-24(x8)
+ 1b0:	00078c63          	beqz	x15,0x1c8
+ 1b4:	fe042703          	lw	x14,-32(x8)
+ 1b8:	fe842783          	lw	x15,-24(x8)
+ 1bc:	02f707bb          	mulw	x15,x14,x15
+ 1c0:	fef42023          	sw	x15,-32(x8)
+ 1c4:	f61ff06f          	j	0x124
+ 1c8:	00000013          	nop
+ 1cc:	fe042703          	lw	x14,-32(x8)
+ 1d0:	000027b7          	lui	x15,0x2
+ 1d4:	7107879b          	addiw	x15,x15,1808
+ 1d8:	02f7473b          	divw	x14,x14,x15
+ 1dc:	fdc42783          	lw	x15,-36(x8)
+ 1e0:	00f707bb          	addw	x15,x14,x15
+ 1e4:	00078593          	mv	x11,x15
+ 1e8:	000007b7          	lui	x15,0x0
+ 1ec:	00078513          	mv	x10,x15
+ 1f0:	00000317          	auipc	x6,0x0
+ 1f4:	000300e7          	jalr	x6
+ 1f8:	fe042703          	lw	x14,-32(x8)
+ 1fc:	000027b7          	lui	x15,0x2
+ 200:	7107879b          	addiw	x15,x15,1808
+ 204:	02f767bb          	remw	x15,x14,x15
+ 208:	fcf42e23          	sw	x15,-36(x8)
+ 20c:	fe442783          	lw	x15,-28(x8)
+ 210:	ff27879b          	addiw	x15,x15,-14
+ 214:	fef42223          	sw	x15,-28(x8)
+ 218:	fe442783          	lw	x15,-28(x8)
+ 21c:	eef04ee3          	bgtz	x15,0x118
+ 220:	00000793          	li	x15,0
+ 224:	00078513          	mv	x10,x15
+ 228:	00002337          	lui	x6,0x2
+ 22c:	41030313          	addi	x6,x6,1040 # 0x2410
+ 230:	00610133          	add	x2,x2,x6
+ 234:	7e813083          	ld	x1,2024(x2)
+ 238:	7e013403          	ld	x8,2016(x2)
+ 23c:	7f010113          	addi	x2,x2,2032
+ 240:	00008067          	ret
+
+Disassembly of section .rodata:
+
+0000000000000000 <.rodata>:
+   0:	2e25                	addiw	x28,x28,9
+   2:	6434                	ld	x13,72(x8)
+	...
+
+Disassembly of section .comment:
+
+0000000000000000 <.comment>:
+   0:	4700                	lw	x8,8(x14)
+   2:	203a4343          	fmadd.s	f6,f20,f3,f4,rmm
+   6:	4728                	lw	x10,72(x14)
+   8:	554e                	lw	x10,240(x2)
+   a:	2029                	0x2029
+   c:	2e302e37          	lui	x28,0x2e302
+  10:	2030                	fld	f12,64(x8)
+  12:	3032                	fld	f0,296(x2)
+  14:	3731                	addiw	x14,x14,-20
+  16:	3130                	fld	f12,96(x10)
+  18:	3031                	0x3031
+  1a:	2820                	fld	f8,80(x8)
+  1c:	7865                	lui	x16,0xffff9
+  1e:	6570                	ld	x12,200(x10)
+  20:	6972                	ld	x18,280(x2)
+  22:	656d                	lui	x10,0x1b
+  24:	746e                	ld	x8,248(x2)
+  26:	6c61                	lui	x24,0x18
+  28:	0029                	0x29

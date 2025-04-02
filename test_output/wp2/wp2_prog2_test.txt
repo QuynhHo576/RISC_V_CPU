@@ -1,0 +1,58 @@
+
+/shared/cse502/tests/wp2/prog2.o:     file format elf64-littleriscv
+
+
+Disassembly of section .text:
+
+0000000000000000 <.text>:
+   0:	ff010113          	addi	x2,x2,-16
+   4:	00a00413          	li	x8,10
+   8:	00900493          	li	x9,9
+   c:	00800513          	li	x10,8
+  10:	00700593          	li	x11,7
+  14:	00600613          	li	x12,6
+  18:	00500693          	li	x13,5
+  1c:	00400713          	li	x14,4
+  20:	00300793          	li	x15,3
+  24:	00200813          	li	x16,2
+  28:	00100893          	li	x17,1
+  2c:	00040e13          	mv	x28,x8
+  30:	00048313          	mv	x6,x9
+  34:	006e033b          	addw	x6,x28,x6
+  38:	00a3053b          	addw	x10,x6,x10
+  3c:	00b505bb          	addw	x11,x10,x11
+  40:	00c5863b          	addw	x12,x11,x12
+  44:	00d606bb          	addw	x13,x12,x13
+  48:	00e6873b          	addw	x14,x13,x14
+  4c:	00f707bb          	addw	x15,x14,x15
+  50:	00080713          	mv	x14,x16
+  54:	00e787bb          	addw	x15,x15,x14
+  58:	00088713          	mv	x14,x17
+  5c:	00e787bb          	addw	x15,x15,x14
+  60:	00078f93          	mv	x31,x15
+  64:	00000013          	nop
+  68:	01010113          	addi	x2,x2,16
+  6c:	00008067          	ret
+
+Disassembly of section .comment:
+
+0000000000000000 <.comment>:
+   0:	4700                	lw	x8,8(x14)
+   2:	203a4343          	fmadd.s	f6,f20,f3,f4,rmm
+   6:	4728                	lw	x10,72(x14)
+   8:	554e                	lw	x10,240(x2)
+   a:	2029                	0x2029
+   c:	2e302e37          	lui	x28,0x2e302
+  10:	2030                	fld	f12,64(x8)
+  12:	3032                	fld	f0,296(x2)
+  14:	3731                	addiw	x14,x14,-20
+  16:	3130                	fld	f12,96(x10)
+  18:	3031                	0x3031
+  1a:	2820                	fld	f8,80(x8)
+  1c:	7865                	lui	x16,0xffff9
+  1e:	6570                	ld	x12,200(x10)
+  20:	6972                	ld	x18,280(x2)
+  22:	656d                	lui	x10,0x1b
+  24:	746e                	ld	x8,248(x2)
+  26:	6c61                	lui	x24,0x18
+  28:	0029                	0x29
