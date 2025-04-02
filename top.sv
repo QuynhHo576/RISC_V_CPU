@@ -163,15 +163,6 @@ always_ff @(posedge clk) begin
     end
 end
 
-// Decoder decoder (
-//         .address(display_addr),
-//         .input_bin(fetched_instr[31:0])
-// );
-// Decoder decoder (
-//         .address(display_addr + 4),
-//         .input_bin(fetched_instr[63:32])
-// );
-
 
 //sequential logic to toggle between the states
 always_ff @(posedge clk) begin
@@ -184,10 +175,11 @@ always_ff @(posedge clk) begin
        display_addr <= next_display_addr;
 end
 
+//====================DECODE====================================
 
 function decoding([31:0] address, [31:0] input_bin);
    reg [7:11] rd;        // Destination register
-   reg [4:0] rs1, rs2;
+   reg [4:0] rs1, rs2; 
    reg [31:0] imm;
    reg [6:0] opcode;    // Opcode
    reg [2:0] funct3;    // Function field
@@ -213,7 +205,7 @@ function decoding([31:0] address, [31:0] input_bin);
        rd = input_bin[11:7];         // Destination register is bits [11:7]
        funct3 = input_bin[14:12];    // Function3 is bits [14:12]
        funct7 = input_bin[31:25];    // Function7 is bits [31:25] (only for R-type)
-       rs1 = input_bin[19:15]; // Source Register 1
+       output rs1 = input_bin[19:15]; // Source Register 1
        rs2 = input_bin[24:20]; // Source Register 2
        imm = input_bin[31:20]; // Immediate Value (for I-type)
        
