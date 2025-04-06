@@ -81,8 +81,18 @@ VL_MODULE(Vtop) {
     VL_SIG8(top__DOT__next_state,2,0);
     VL_SIG8(top__DOT__fetch_inst__DOT__state,2,0);
     VL_SIG8(top__DOT__fetch_inst__DOT__next_state,2,0);
-    VL_SIG(top__DOT__IF_ID_register__DOT__instruction_reg,31,0);
-    //char	__VpadToAlign124[4];
+    VL_SIG8(top__DOT__Decoder__DOT__rs1,4,0);
+    VL_SIG8(top__DOT__Decoder__DOT__rs2,4,0);
+    VL_SIG8(top__DOT__Decoder__DOT__rd,4,0);
+    VL_SIG8(top__DOT__Decoder__DOT__opcode,6,0);
+    VL_SIG8(top__DOT__Decoder__DOT__funct7,6,0);
+    VL_SIG8(top__DOT__Decoder__DOT__funct3,2,0);
+    VL_SIG16(top__DOT__fetch_inst__DOT__index,9,0);
+    VL_SIG16(top__DOT__fetch_inst__DOT__pc_fetch,9,0);
+    //char	__VpadToAlign130[2];
+    VL_SIG(top__DOT__if_instr,31,0);
+    VL_SIG(top__DOT__Decoder__DOT__address,31,0);
+    VL_SIG(top__DOT__Decoder__DOT__imm,31,0);
     VL_SIG64(top__DOT__pc,63,0);
     VL_SIG64(top__DOT__instruction,63,0);
     VL_SIG64(top__DOT__next_pc,63,0);
@@ -94,21 +104,19 @@ VL_MODULE(Vtop) {
     VL_SIG64(top__DOT__fetch_inst__DOT__fetched_instr,63,0);
     VL_SIG64(top__DOT__fetch_inst__DOT__display_addr,63,0);
     VL_SIG64(top__DOT__fetch_inst__DOT__next_display_addr,63,0);
-    VL_SIG64(top__DOT__IF_ID_register__DOT__pc_reg,63,0);
+    VL_SIG64(top__DOT__Decoder__DOT__decoded_instruction,63,0);
+    VL_SIG(top__DOT__fetch_inst__DOT__instruction_array[1000],31,0);
     
     // LOCAL VARIABLES
     // Internals; generally not touched by application code
-    VL_SIG8(__Vdly__m_axi_arvalid,0,0);
-    VL_SIG8(__Vdly__m_axi_rready,0,0);
     VL_SIG8(__Vclklast__TOP__clk,0,0);
-    VL_SIG8(__Vclklast__TOP__reset,0,0);
+    //char	__VpadToAlign4245[3];
+    VL_SIG(top__DOT__fetch_inst__DOT____Vlvbound1,31,0);
+    VL_SIG(top__DOT__fetch_inst__DOT____Vlvbound2,31,0);
     VL_SIG(__Vm_traceActivity,31,0);
-    //char	__VpadToAlign236[4];
-    VL_SIG64(__Vdly__top__DOT__fetch_inst__DOT__next_display_addr,63,0);
     
     // INTERNAL VARIABLES
     // Internals; generally not touched by application code
-    //char	__VpadToAlign252[4];
     Vtop__Syms*	__VlSymsp;		// Symbol table
     
     // PARAMETERS
@@ -144,7 +152,7 @@ VL_MODULE(Vtop) {
   private:
     static QData	_change_request(Vtop__Syms* __restrict vlSymsp);
   public:
-    static void	_combo__TOP__5(Vtop__Syms* __restrict vlSymsp);
+    static void	_combo__TOP__4(Vtop__Syms* __restrict vlSymsp);
   private:
     void	_configure_coverage(Vtop__Syms* __restrict vlSymsp, bool first);
     void	_ctor_var_reset();
@@ -154,13 +162,14 @@ VL_MODULE(Vtop) {
     static void	_eval_settle(Vtop__Syms* __restrict vlSymsp);
     static void	_initial__TOP__1(Vtop__Syms* __restrict vlSymsp);
     static void	_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp);
-    static void	_sequent__TOP__3(Vtop__Syms* __restrict vlSymsp);
-    static void	_sequent__TOP__4(Vtop__Syms* __restrict vlSymsp);
+    static void	_sequent__TOP__5(Vtop__Syms* __restrict vlSymsp);
+    static void	_settle__TOP__3(Vtop__Syms* __restrict vlSymsp);
     static void	traceChgThis(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
     static void	traceChgThis__2(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
     static void	traceChgThis__3(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
     static void	traceChgThis__4(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
     static void	traceChgThis__5(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
+    static void	traceChgThis__6(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
     static void	traceFullThis(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
     static void	traceFullThis__1(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
     static void	traceInitThis(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);

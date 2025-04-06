@@ -18,8 +18,8 @@ module Fetch (
     input  logic                  m_axi_rlast,
 
     // Outputs to Decode stage
-    output logic [63:0] if_instr,
-    output logic [63:0] if_address
+    output logic [31:0] if_instr
+    
 );
 
     typedef enum logic [2:0] {
@@ -33,6 +33,11 @@ module Fetch (
     logic [63:0] fetched_instr;
     logic [63:0] display_addr;
     logic [63:0] next_display_addr;
+
+    logic [31:0] instruction_array [1000];
+    logic [9:0]  index;
+
+    logic [9:0]  pc_fetch;
 
     // Combinational logic for state transitions
     always_comb begin
@@ -83,6 +88,7 @@ module Fetch (
                 m_axi_rready <= 1;
             if (m_axi_rvalid == 1 && m_axi_rready == 1) begin
                 m_axi_rready <= 0;
+
                 fetched_instr <= m_axi_rdata;
                 next_display_addr <= display_addr + 8;
             end
@@ -104,8 +110,23 @@ module Fetch (
             display_addr  <= next_display_addr;
         end
     end
+    always_ff @(posedge clk) begin
+        if (reset) begin
+            index <= 0;
+        end else if (m_axi_rvalid && m_axi_rready && (index < 1000)) begin
+            instruction_array[index] <= m_axi_rdata[31:0];
+            instruction_array[index + 1] <= m_axi_rdata[63:32];
+            index <= index + 2;
+        end
+    end
 
-assign if_instr         = fetched_instr;
-assign if_address = display_addr;
+    always_ff @(posedge clk) begin
+        if (reset) begin
+            pc_fetch <= 0;
+        end else if (m_axi_rlast == 1) begin 
+            pc_fetch <= pc_fetch + 4;
+        end
+    end
 
+assign if_instr         = instruction_array[pc_fetch[9:2]];
 endmodule

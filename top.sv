@@ -1,6 +1,7 @@
 `include "Sysbus.defs"
 `include "fetch.sv"
-`include "pipeline_reg.sv"
+//`include "pipeline_reg.sv"
+`include "decode.sv"
 
 module top
 #(
@@ -103,8 +104,8 @@ logic [ADDR_WIDTH-1:0] next_display_addr;
 //load and store
 
 //============FETCH============================
-logic [63:0] if_instr;
-logic [63:0] if_address; 
+logic [31:0] if_instr;
+//logic [63:0] if_address; 
 
 Fetch fetch_inst (
         .clk            (clk),
@@ -125,18 +126,40 @@ Fetch fetch_inst (
         .m_axi_rready   (m_axi_rready),
         .m_axi_rlast    (m_axi_rlast),
 
-        .if_instr       (if_instr),
-        .if_address     (if_address)
+        .if_instr       (if_instr)
+        //.if_address     (if_address)
     );
 
-//=============IF_ID_REG====================
-IF_ID_register IF_ID_register(
-        .clk            (clk),
-        .reset          (reset),
+// //=============IF_ID_REG====================
+// logic [63:0] if_id_instr_out;
+// logic [63:0] if_if_address_out; 
 
-        .if_id_pc_in    (if_address),
-        .if_id_instruction_in(if_instr),
+// IF_ID_register IF_ID_register(
+//         .clk            (clk),
+//         .reset          (reset),
+
+//         .if_id_address_in    (if_address),
+//         .if_id_instruction_in(if_instr),
+
+//         .if_id_address_out    (if_if_address_out),
+//         .if_id_instruction_out(if_id_instr_out)
+// );
+//===============DECODE====================
+Decoder Decoder(
+        .input_bin(if_instr),
+        //.address(if_if_address_out)
+
+        // .rs1, 
+        // .rs2, 
+        // .rd,
+        // .imm_signed,
+        // .imm_unsigned,
+        // .opcode
+        // .funct7,
+        // .funct3
 );
+
+//===============
 
 //Combinational logic to handle read transaction of current state
 // always_comb begin
