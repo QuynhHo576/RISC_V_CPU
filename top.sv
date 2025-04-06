@@ -1,5 +1,6 @@
 `include "Sysbus.defs"
-//`include "decode.sv"
+`include "fetch.sv"
+`include "pipeline_reg.sv"
 
 module top
 #(
@@ -81,9 +82,7 @@ module top
  // Define state machine states using a named enumeration
 typedef enum logic [2:0] {
    SEND_READ_ADDRESS = 3'b000,
-   //SEND_READ_ADDRESS_COMPLETE = 3'b001,
    SEND_READ_DATA    = 3'b001,
-   //SEND_READ_DATA_COMPLETE = 3'b011,
    DECODE_INSTRUCTION = 3'b100
 } state_t;
 
@@ -103,77 +102,113 @@ logic [ADDR_WIDTH-1:0] next_display_addr;
 //ALU: op1 op2, tin hieu chon phep toan, function add, and, xor, shift
 //load and store
 
-// //Combinational logic to handle read transaction of current state
-always_comb begin
-   if (!reset) begin
-       case(state)
-           SEND_READ_ADDRESS: begin   
-               if (m_axi_arready && m_axi_arvalid)   
-                   next_state = SEND_READ_DATA;
-           end
-           SEND_READ_DATA: begin
-               if (m_axi_rvalid && m_axi_rready) begin
-                   if (m_axi_rdata == 64'b0) $finish;
-                       next_state = DECODE_INSTRUCTION;
-               end
-           end
-           DECODE_INSTRUCTION:    
-                if (m_axi_rlast) begin
-                    if (!m_axi_rvalid) begin
+//============FETCH============================
+logic [63:0] if_instr;
+logic [63:0] if_address; 
+
+Fetch fetch_inst (
+        .clk            (clk),
+        .reset          (reset),
+        .entry          (entry),
+
+        // AXI Read Address Channel
+        .m_axi_araddr   (m_axi_araddr),
+        .m_axi_arvalid  (m_axi_arvalid),
+        .m_axi_arready  (m_axi_arready),
+        .m_axi_arlen    (m_axi_arlen),
+        .m_axi_arsize   (m_axi_arsize),
+        .m_axi_arburst  (m_axi_arburst),
+
+        // AXI Read Data Channel
+        .m_axi_rdata    (m_axi_rdata),
+        .m_axi_rvalid   (m_axi_rvalid),
+        .m_axi_rready   (m_axi_rready),
+        .m_axi_rlast    (m_axi_rlast),
+
+        .if_instr       (if_instr),
+        .if_address     (if_address)
+    );
+
+//=============IF_ID_REG====================
+IF_ID_register IF_ID_register(
+        .clk            (clk),
+        .reset          (reset),
+
+        .if_id_pc_in    (if_address),
+        .if_id_instruction_in(if_instr),
+);
+
+//Combinational logic to handle read transaction of current state
+// always_comb begin
+//    if (!reset) begin
+//        case(state)
+//            SEND_READ_ADDRESS: begin   
+//                if (m_axi_arready && m_axi_arvalid)   
+//                    next_state = SEND_READ_DATA;
+//            end
+//            SEND_READ_DATA: begin
+//                if (m_axi_rvalid && m_axi_rready) begin
+//                    if (m_axi_rdata == 64'b0) $finish;
+//                        next_state = DECODE_INSTRUCTION;
+//                end
+//            end
+//            DECODE_INSTRUCTION:    
+//                 if (m_axi_rlast) begin
+//                     if (!m_axi_rvalid) begin
                         
-                        next_pc = pc + 64;
-                        next_state = SEND_READ_ADDRESS;
-                    end
-                end else begin
-                    next_state = SEND_READ_DATA;
-                end
-       endcase
-   end
-end
+//                         next_pc = pc + 64;
+//                         next_state = SEND_READ_ADDRESS;
+//                     end
+//                 end else begin
+//                     next_state = SEND_READ_DATA;
+//                 end
+//        endcase
+//    end
+// end
 
-//Sequential logic to keep track of combinational logic output
-always_ff @(posedge clk) begin 
-    //reset
-    m_axi_araddr <= pc;
-    m_axi_arlen <= 7;
-    m_axi_arsize <= 8;
-    m_axi_arburst <= 2;
+// //Sequential logic to keep track of combinational logic output
+// always_ff @(posedge clk) begin 
+//     //reset
+//     m_axi_araddr <= pc;
+//     m_axi_arlen <= 7;
+//     m_axi_arsize <= 8;
+//     m_axi_arburst <= 2;
     
-    if(!reset) begin
-    //READ ADDRESS CHANNEL
-        if (state == SEND_READ_ADDRESS) 
-            m_axi_arvalid <= 1; 
-        else m_axi_arvalid <= 0; 
-        if (m_axi_arvalid == 1 && m_axi_arready == 1)
-            m_axi_arvalid <= 0;
+//     if(!reset) begin
+//     //READ ADDRESS CHANNEL
+//         if (state == SEND_READ_ADDRESS) 
+//             m_axi_arvalid <= 1; 
+//         else m_axi_arvalid <= 0; 
+//         if (m_axi_arvalid == 1 && m_axi_arready == 1)
+//             m_axi_arvalid <= 0;
 
-        //READ DATA CHANNEL
-        if (state == SEND_READ_DATA && m_axi_rvalid == 1)
-            m_axi_rready <= 1;
-        if (m_axi_rvalid == 1 && m_axi_rready == 1) begin
-            m_axi_rready <= 0;
-            fetched_instr <= m_axi_rdata;
-        end
-        //DECODE
-        if (state == DECODE_INSTRUCTION) begin
-            decoding(display_addr, fetched_instr[31:0]);
-            decoding(display_addr + 4, fetched_instr[63:32]);
-            next_display_addr <= display_addr + 8;
-        end
-    end
-end
+//         //READ DATA CHANNEL
+//         if (state == SEND_READ_DATA && m_axi_rvalid == 1)
+//             m_axi_rready <= 1;
+//         if (m_axi_rvalid == 1 && m_axi_rready == 1) begin
+//             m_axi_rready <= 0;
+//             fetched_instr <= m_axi_rdata;
+//         end
+//         //DECODE
+//         if (state == DECODE_INSTRUCTION) begin
+//             decoding(display_addr, fetched_instr[31:0]);
+//             decoding(display_addr + 4, fetched_instr[63:32]);
+//             next_display_addr <= display_addr + 8;
+//         end
+//     end
+// end
 
 
-//sequential logic to toggle between the states
-always_ff @(posedge clk) begin
-   if (reset) begin
-       pc                         <= entry;
-       state                      <= SEND_READ_ADDRESS;
-   end else
-       state <= next_state;
-       pc    <= next_pc;
-       display_addr <= next_display_addr;
-end
+// //sequential logic to toggle between the states
+// always_ff @(posedge clk) begin
+//    if (reset) begin
+//        pc                         <= entry;
+//        state                      <= SEND_READ_ADDRESS;
+//    end else
+//        state <= next_state;
+//        pc    <= next_pc;
+//        display_addr <= next_display_addr;
+// end
 
 //====================DECODE====================================
 
@@ -336,6 +371,9 @@ function decoding([31:0] address, [31:0] input_bin);
 initial begin
    $display("Initializing top, entry point = 0x%x", entry);
 end
+
+//======================INPUT INTO REGISTER FILE=============================
+
 
 
 endmodule
