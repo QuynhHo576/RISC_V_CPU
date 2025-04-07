@@ -99,9 +99,9 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
     __Vdly__top__DOT__fetch_inst__DOT__pc_fetch = vlTOPp->top__DOT__fetch_inst__DOT__pc_fetch;
     __Vdly__top__DOT__fetch_inst__DOT__next_display_addr 
 	= vlTOPp->top__DOT__fetch_inst__DOT__next_display_addr;
-    __Vdly__top__DOT__fetch_inst__DOT__index = vlTOPp->top__DOT__fetch_inst__DOT__index;
     __Vdly__m_axi_arvalid = vlTOPp->m_axi_arvalid;
     __Vdly__m_axi_rready = vlTOPp->m_axi_rready;
+    __Vdly__top__DOT__fetch_inst__DOT__index = vlTOPp->top__DOT__fetch_inst__DOT__index;
     __Vdlyvset__top__DOT__fetch_inst__DOT__instruction_array__v0 = 0U;
     __Vdlyvset__top__DOT__fetch_inst__DOT__instruction_array__v1 = 0U;
     // ALWAYS at fetch.sv:123
@@ -238,7 +238,7 @@ void Vtop::_settle__TOP__3(Vtop__Syms* __restrict vlSymsp) {
 	    }
 	}
     }
-    // ALWAYS at decode.sv:22
+    // ALWAYS at decode.sv:23
     vlTOPp->top__DOT__Decoder__DOT__opcode = (0x7fU 
 					      & vlTOPp->top__DOT__if_instr);
     vlTOPp->top__DOT__Decoder__DOT__rd = (0x1fU & (vlTOPp->top__DOT__if_instr 
@@ -255,18 +255,16 @@ void Vtop::_settle__TOP__3(Vtop__Syms* __restrict vlSymsp) {
     vlTOPp->top__DOT__Decoder__DOT__funct7 = (0x7fU 
 					      & (vlTOPp->top__DOT__if_instr 
 						 >> 0x19U));
-    vlTOPp->top__DOT__Decoder__DOT__imm_signed = (0xfffU 
-						  & (vlTOPp->top__DOT__if_instr 
-						     >> 0x14U));
     if (((((((((0x33U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)) 
 	       | (0x13U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) 
 	      | (0x1bU == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) 
-	     | (0x23U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) 
-	    | (0x63U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) 
-	   | (0x37U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) 
-	  | (0x17U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) 
-	 | (0x6fU == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
+	     | (0x67U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) 
+	    | (3U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) 
+	   | (0x23U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) 
+	  | (0x63U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) 
+	 | (0x37U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
 	if (VL_UNLIKELY((0x33U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
+	    vlTOPp->top__DOT__Decoder__DOT__imm_signed = 0U;
 	    if ((0U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
 		if ((0U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct7))) {
 		    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x414444);
@@ -328,33 +326,42 @@ void Vtop::_settle__TOP__3(Vtop__Syms* __restrict vlSymsp) {
 				       << 0xcU)) | 
 		       (0xfffU & (vlTOPp->top__DOT__if_instr 
 				  >> 0x14U)));
+		vlTOPp->top__DOT__Decoder__DOT__rs2 = 0U;
 		if ((0U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
 		    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x41444449);
+		    vlTOPp->top__DOT__Decoder__DOT__alu_op = 2U;
 		} else {
 		    if ((7U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
 			vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x414e4449);
+			vlTOPp->top__DOT__Decoder__DOT__alu_op = 0U;
 		    } else {
 			if ((6U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
 			    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4f5249);
+			    vlTOPp->top__DOT__Decoder__DOT__alu_op = 1U;
 			} else {
 			    if ((4U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
 				vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x584f5249);
+				vlTOPp->top__DOT__Decoder__DOT__alu_op = 3U;
 			    } else {
 				if ((1U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
 				    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x534c4c49);
+				    vlTOPp->top__DOT__Decoder__DOT__alu_op = 4U;
 				} else {
 				    if ((3U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
 					vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x534c544955);
+					vlTOPp->top__DOT__Decoder__DOT__alu_op = 6U;
 				    } else {
 					if ((5U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
 					    if ((0U 
 						 == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct7))) {
 						vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x53524c49);
+						vlTOPp->top__DOT__Decoder__DOT__alu_op = 5U;
 					    } else {
 						if (
 						    (0x20U 
 						     == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct7))) {
 						    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x53524149);
+						    vlTOPp->top__DOT__Decoder__DOT__alu_op = 7U;
 						}
 					    }
 					}
@@ -364,7 +371,7 @@ void Vtop::_settle__TOP__3(Vtop__Syms* __restrict vlSymsp) {
 			}
 		    }
 		}
-		VL_WRITEF("%x :%x %s x%2#, x%2#, %11d\n",
+		VL_WRITEF("I-type %x :%x %s x%2#, x%2#, %11d\n",
 			  32,vlTOPp->top__DOT__Decoder__DOT__address,
 			  32,vlTOPp->top__DOT__if_instr,
 			  64,vlTOPp->top__DOT__Decoder__DOT__decoded_instruction,
@@ -373,24 +380,36 @@ void Vtop::_settle__TOP__3(Vtop__Syms* __restrict vlSymsp) {
 			  32,vlTOPp->top__DOT__Decoder__DOT__imm_signed);
 	    } else {
 		if (VL_UNLIKELY((0x1bU == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
+		    vlTOPp->top__DOT__Decoder__DOT__imm_signed 
+			= ((0xfffff000U & (VL_NEGATE_I((IData)(
+							       (1U 
+								& (vlTOPp->top__DOT__if_instr 
+								   >> 0x1fU)))) 
+					   << 0xcU)) 
+			   | (0xfffU & (vlTOPp->top__DOT__if_instr 
+					>> 0x14U)));
 		    if ((0U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
 			vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4144444957);
+			vlTOPp->top__DOT__Decoder__DOT__alu_op = 2U;
 		    } else {
 			if ((1U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
 			    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x534c4c4957);
+			    vlTOPp->top__DOT__Decoder__DOT__alu_op = 4U;
 			} else {
 			    if ((5U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
 				if ((0U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct7))) {
 				    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x53524c4957);
+				    vlTOPp->top__DOT__Decoder__DOT__alu_op = 5U;
 				} else {
 				    if ((0x20U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct7))) {
 					vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x5352414957);
+					vlTOPp->top__DOT__Decoder__DOT__alu_op = 7U;
 				    }
 				}
 			    }
 			}
 		    }
-		    VL_WRITEF("%x :%x %s x%2#, x%2#, %11d\n",
+		    VL_WRITEF("I-Type %x :%x %s x%2#, x%2#, %11d\n",
 			      32,vlTOPp->top__DOT__Decoder__DOT__address,
 			      32,vlTOPp->top__DOT__if_instr,
 			      64,vlTOPp->top__DOT__Decoder__DOT__decoded_instruction,
@@ -398,125 +417,157 @@ void Vtop::_settle__TOP__3(Vtop__Syms* __restrict vlSymsp) {
 			      5,vlTOPp->top__DOT__Decoder__DOT__rs1,
 			      32,vlTOPp->top__DOT__Decoder__DOT__imm_signed);
 		} else {
-		    if (VL_UNLIKELY((0x23U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
-			vlTOPp->top__DOT__Decoder__DOT__imm_signed 
-			    = ((0xfffff000U & (VL_NEGATE_I((IData)(
-								   (1U 
-								    & (vlTOPp->top__DOT__if_instr 
-								       >> 0x1fU)))) 
-					       << 0xcU)) 
-			       | ((0xfe0U & (vlTOPp->top__DOT__if_instr 
-					     >> 0x14U)) 
-				  | (0x1fU & (vlTOPp->top__DOT__if_instr 
-					      >> 7U))));
-			if ((0U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
-			    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x5342);
-			} else {
-			    if ((1U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
-				vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x5348);
-			    } else {
-				if ((2U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
-				    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x5357);
-				} else {
-				    if ((3U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
-					vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x5344);
-				    }
-				}
-			    }
-			}
-			VL_WRITEF("%x :%x %s x%2#, %11d(x%2#)\n",
+		    if (VL_UNLIKELY((0x67U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
+			VL_WRITEF("I-Type %x :%x     JALR x%2#, x%2#, %11d\n",
 				  32,vlTOPp->top__DOT__Decoder__DOT__address,
 				  32,vlTOPp->top__DOT__if_instr,
-				  64,vlTOPp->top__DOT__Decoder__DOT__decoded_instruction,
-				  5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rs2),
-				  32,vlTOPp->top__DOT__Decoder__DOT__imm_signed,
-				  5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rs1));
+				  5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rd),
+				  5,vlTOPp->top__DOT__Decoder__DOT__rs1,
+				  32,vlTOPp->top__DOT__Decoder__DOT__imm_signed);
+			vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4a414c52);
+			vlTOPp->top__DOT__Decoder__DOT__alu_op = 2U;
 		    } else {
-			if (VL_UNLIKELY((0x63U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
-			    vlTOPp->top__DOT__Decoder__DOT__imm_signed 
-				= ((0xffffe000U & (
-						   VL_NEGATE_I((IData)(
-								       (1U 
-									& (vlTOPp->top__DOT__if_instr 
-									   >> 0x1fU)))) 
-						   << 0xdU)) 
-				   | ((0x1000U & (vlTOPp->top__DOT__if_instr 
-						  >> 0x13U)) 
-				      | ((0x800U & 
-					  (vlTOPp->top__DOT__if_instr 
-					   << 4U)) 
-					 | ((0x7e0U 
-					     & (vlTOPp->top__DOT__if_instr 
-						>> 0x14U)) 
-					    | (0x1eU 
-					       & (vlTOPp->top__DOT__if_instr 
-						  >> 7U))))));
-			    if ((0U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
-				vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x424551);
+			if (VL_UNLIKELY((3U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
+			    if ((3U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+				vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4c44);
 			    } else {
-				if ((1U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
-				    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x424e45);
+				if ((2U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+				    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4c57);
 				} else {
 				    if ((4U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
-					vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x424c54);
-				    } else {
-					if ((5U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
-					    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x424745);
-					}
+					vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4c4255);
 				    }
 				}
 			    }
-			    VL_WRITEF("%x :%x %s x%2#, x%2#, %11d\n",
+			    vlTOPp->top__DOT__Decoder__DOT__alu_op = 0U;
+			    VL_WRITEF("I-Type %x :%x %s x%2#, %11d(x%2#)\n",
 				      32,vlTOPp->top__DOT__Decoder__DOT__address,
 				      32,vlTOPp->top__DOT__if_instr,
 				      64,vlTOPp->top__DOT__Decoder__DOT__decoded_instruction,
-				      5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rs1),
-				      5,vlTOPp->top__DOT__Decoder__DOT__rs2,
-				      32,vlTOPp->top__DOT__Decoder__DOT__imm_signed);
+				      5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rd),
+				      32,vlTOPp->top__DOT__Decoder__DOT__imm_signed,
+				      5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rs1));
 			} else {
-			    if (VL_UNLIKELY((0x37U 
+			    if (VL_UNLIKELY((0x23U 
 					     == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
 				vlTOPp->top__DOT__Decoder__DOT__imm_signed 
-				    = (0xfffff000U 
-				       & vlTOPp->top__DOT__if_instr);
-				vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4c5549);
-				VL_WRITEF("%x :%x      LUI x%2#, %11d\n",
+				    = ((0xfffff000U 
+					& (VL_NEGATE_I((IData)(
+							       (1U 
+								& (vlTOPp->top__DOT__if_instr 
+								   >> 0x1fU)))) 
+					   << 0xcU)) 
+				       | ((0xfe0U & 
+					   (vlTOPp->top__DOT__if_instr 
+					    >> 0x14U)) 
+					  | (0x1fU 
+					     & (vlTOPp->top__DOT__if_instr 
+						>> 7U))));
+				vlTOPp->top__DOT__Decoder__DOT__alu_op = 2U;
+				if ((0U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+				    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x5342);
+				} else {
+				    if ((1U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+					vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x5348);
+				    } else {
+					if ((2U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+					    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x5357);
+					} else {
+					    if ((3U 
+						 == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+						vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x5344);
+					    }
+					}
+				    }
+				}
+				VL_WRITEF("S-Type %x :%x %s x%2#, %11d(x%2#)\n",
 					  32,vlTOPp->top__DOT__Decoder__DOT__address,
 					  32,vlTOPp->top__DOT__if_instr,
-					  5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rd),
-					  32,vlTOPp->top__DOT__Decoder__DOT__imm_signed);
+					  64,vlTOPp->top__DOT__Decoder__DOT__decoded_instruction,
+					  5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rs2),
+					  32,vlTOPp->top__DOT__Decoder__DOT__imm_signed,
+					  5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rs1));
 			    } else {
-				if ((0x17U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) {
+				if ((0x63U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) {
 				    vlTOPp->top__DOT__Decoder__DOT__imm_signed 
-					= (0xfffff000U 
-					   & vlTOPp->top__DOT__if_instr);
-				    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4155495043);
-				    VL_WRITEF("%x :%x    AUIPC x%2#, %11d\n",
-					      32,vlTOPp->top__DOT__Decoder__DOT__address,
-					      32,vlTOPp->top__DOT__if_instr,
-					      5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rd),
-					      32,vlTOPp->top__DOT__Decoder__DOT__imm_signed);
-				} else {
-				    vlTOPp->top__DOT__Decoder__DOT__imm_signed 
-					= ((0xffe00000U 
+					= ((0xffffe000U 
 					    & (VL_NEGATE_I((IData)(
 								   (1U 
 								    & (vlTOPp->top__DOT__if_instr 
 								       >> 0x1fU)))) 
-					       << 0x15U)) 
-					   | ((0x100000U 
+					       << 0xdU)) 
+					   | ((0x1000U 
 					       & (vlTOPp->top__DOT__if_instr 
-						  >> 0xbU)) 
-					      | ((0xff000U 
-						  & vlTOPp->top__DOT__if_instr) 
-						 | ((0x800U 
+						  >> 0x13U)) 
+					      | ((0x800U 
+						  & (vlTOPp->top__DOT__if_instr 
+						     << 4U)) 
+						 | ((0x7e0U 
 						     & (vlTOPp->top__DOT__if_instr 
-							>> 9U)) 
-						    | (0x7feU 
+							>> 0x14U)) 
+						    | (0x1eU 
 						       & (vlTOPp->top__DOT__if_instr 
-							  >> 0x14U))))));
-				    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4a414c);
-				    VL_WRITEF("%x :%x      JAL x%2#, %11d\n",
+							  >> 7U))))));
+				    vlTOPp->top__DOT__Decoder__DOT__imm_unsigned 
+					= ((0x800U 
+					    & (vlTOPp->top__DOT__if_instr 
+					       << 4U)) 
+					   | ((0x7e0U 
+					       & (vlTOPp->top__DOT__if_instr 
+						  >> 0x14U)) 
+					      | (0x1eU 
+						 & (vlTOPp->top__DOT__if_instr 
+						    >> 7U))));
+				    if ((0U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+					vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x424551);
+					vlTOPp->top__DOT__Decoder__DOT__alu_op = 8U;
+				    } else {
+					if ((1U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+					    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x424e45);
+					    vlTOPp->top__DOT__Decoder__DOT__alu_op = 9U;
+					} else {
+					    if ((4U 
+						 == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+						vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x424c54);
+						vlTOPp->top__DOT__Decoder__DOT__alu_op = 0xaU;
+					    } else {
+						if (
+						    (5U 
+						     == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+						    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x424745);
+						    vlTOPp->top__DOT__Decoder__DOT__alu_op = 0xbU;
+						} else {
+						    if (
+							(6U 
+							 == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+							vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x424c5455);
+							vlTOPp->top__DOT__Decoder__DOT__alu_op = 0xcU;
+						    } else {
+							if (
+							    (7U 
+							     == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+							    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x42474555);
+							    vlTOPp->top__DOT__Decoder__DOT__alu_op = 0xdU;
+							}
+						    }
+						}
+					    }
+					}
+				    }
+				    VL_WRITEF("B-Type %x :%x %s x%2#, x%2#, %11d\n",
+					      32,vlTOPp->top__DOT__Decoder__DOT__address,
+					      32,vlTOPp->top__DOT__if_instr,
+					      64,vlTOPp->top__DOT__Decoder__DOT__decoded_instruction,
+					      5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rs1),
+					      5,vlTOPp->top__DOT__Decoder__DOT__rs2,
+					      32,vlTOPp->top__DOT__Decoder__DOT__imm_signed);
+				} else {
+				    vlTOPp->top__DOT__Decoder__DOT__imm_signed 
+					= (0xfffff000U 
+					   & vlTOPp->top__DOT__if_instr);
+				    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4c5549);
+				    vlTOPp->top__DOT__Decoder__DOT__alu_op = 0U;
+				    VL_WRITEF("%x :%x      LUI x%2#, %11d\n",
 					      32,vlTOPp->top__DOT__Decoder__DOT__address,
 					      32,vlTOPp->top__DOT__if_instr,
 					      5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rd),
@@ -529,34 +580,41 @@ void Vtop::_settle__TOP__3(Vtop__Syms* __restrict vlSymsp) {
 	    }
 	}
     } else {
-	if (VL_UNLIKELY((0x67U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
-	    VL_WRITEF("%x :%x     JALR x%2#, x%2#, %11d\n",
+	if (VL_UNLIKELY((0x17U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
+	    vlTOPp->top__DOT__Decoder__DOT__imm_signed 
+		= (0xfffff000U & vlTOPp->top__DOT__if_instr);
+	    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4155495043);
+	    vlTOPp->top__DOT__Decoder__DOT__alu_op = 2U;
+	    VL_WRITEF("U-Type %x :%x    AUIPC x%2#, %11d\n",
 		      32,vlTOPp->top__DOT__Decoder__DOT__address,
 		      32,vlTOPp->top__DOT__if_instr,
 		      5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rd),
-		      5,vlTOPp->top__DOT__Decoder__DOT__rs1,
 		      32,vlTOPp->top__DOT__Decoder__DOT__imm_signed);
-	    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4a414c52);
 	} else {
-	    if (VL_UNLIKELY((3U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
-		if ((3U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
-		    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4c44);
-		} else {
-		    if ((2U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
-			vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4c57);
-		    } else {
-			if ((4U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
-			    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4c4255);
-			}
-		    }
-		}
-		VL_WRITEF("%x :%x %s x%2#, %11d(x%2#)\n",
+	    if (VL_UNLIKELY((0x6fU == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
+		vlTOPp->top__DOT__Decoder__DOT__imm_signed 
+		    = ((0xffe00000U & (VL_NEGATE_I((IData)(
+							   (1U 
+							    & (vlTOPp->top__DOT__if_instr 
+							       >> 0x1fU)))) 
+				       << 0x15U)) | 
+		       ((0x100000U & (vlTOPp->top__DOT__if_instr 
+				      >> 0xbU)) | (
+						   (0xff000U 
+						    & vlTOPp->top__DOT__if_instr) 
+						   | ((0x800U 
+						       & (vlTOPp->top__DOT__if_instr 
+							  >> 9U)) 
+						      | (0x7feU 
+							 & (vlTOPp->top__DOT__if_instr 
+							    >> 0x14U))))));
+		vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4a414c);
+		vlTOPp->top__DOT__Decoder__DOT__alu_op = 0xeU;
+		VL_WRITEF("J-Type %x :%x      JAL x%2#, %11d\n",
 			  32,vlTOPp->top__DOT__Decoder__DOT__address,
 			  32,vlTOPp->top__DOT__if_instr,
-			  64,vlTOPp->top__DOT__Decoder__DOT__decoded_instruction,
 			  5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rd),
-			  32,vlTOPp->top__DOT__Decoder__DOT__imm_signed,
-			  5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rs1));
+			  32,vlTOPp->top__DOT__Decoder__DOT__imm_signed);
 	    }
 	}
     }
@@ -602,7 +660,7 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__5(Vtop__Syms* __restrict vlSymsp) {
     VL_DEBUG_IF(VL_PRINTF("    Vtop::_sequent__TOP__5\n"); );
     Vtop* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
-    // ALWAYS at decode.sv:22
+    // ALWAYS at decode.sv:23
     vlTOPp->top__DOT__Decoder__DOT__opcode = (0x7fU 
 					      & vlTOPp->top__DOT__if_instr);
     vlTOPp->top__DOT__Decoder__DOT__rd = (0x1fU & (vlTOPp->top__DOT__if_instr 
@@ -619,18 +677,16 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__5(Vtop__Syms* __restrict vlSymsp) {
     vlTOPp->top__DOT__Decoder__DOT__funct7 = (0x7fU 
 					      & (vlTOPp->top__DOT__if_instr 
 						 >> 0x19U));
-    vlTOPp->top__DOT__Decoder__DOT__imm_signed = (0xfffU 
-						  & (vlTOPp->top__DOT__if_instr 
-						     >> 0x14U));
     if (((((((((0x33U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)) 
 	       | (0x13U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) 
 	      | (0x1bU == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) 
-	     | (0x23U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) 
-	    | (0x63U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) 
-	   | (0x37U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) 
-	  | (0x17U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) 
-	 | (0x6fU == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
+	     | (0x67U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) 
+	    | (3U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) 
+	   | (0x23U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) 
+	  | (0x63U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) 
+	 | (0x37U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
 	if (VL_UNLIKELY((0x33U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
+	    vlTOPp->top__DOT__Decoder__DOT__imm_signed = 0U;
 	    if ((0U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
 		if ((0U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct7))) {
 		    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x414444);
@@ -692,33 +748,42 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__5(Vtop__Syms* __restrict vlSymsp) {
 				       << 0xcU)) | 
 		       (0xfffU & (vlTOPp->top__DOT__if_instr 
 				  >> 0x14U)));
+		vlTOPp->top__DOT__Decoder__DOT__rs2 = 0U;
 		if ((0U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
 		    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x41444449);
+		    vlTOPp->top__DOT__Decoder__DOT__alu_op = 2U;
 		} else {
 		    if ((7U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
 			vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x414e4449);
+			vlTOPp->top__DOT__Decoder__DOT__alu_op = 0U;
 		    } else {
 			if ((6U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
 			    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4f5249);
+			    vlTOPp->top__DOT__Decoder__DOT__alu_op = 1U;
 			} else {
 			    if ((4U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
 				vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x584f5249);
+				vlTOPp->top__DOT__Decoder__DOT__alu_op = 3U;
 			    } else {
 				if ((1U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
 				    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x534c4c49);
+				    vlTOPp->top__DOT__Decoder__DOT__alu_op = 4U;
 				} else {
 				    if ((3U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
 					vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x534c544955);
+					vlTOPp->top__DOT__Decoder__DOT__alu_op = 6U;
 				    } else {
 					if ((5U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
 					    if ((0U 
 						 == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct7))) {
 						vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x53524c49);
+						vlTOPp->top__DOT__Decoder__DOT__alu_op = 5U;
 					    } else {
 						if (
 						    (0x20U 
 						     == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct7))) {
 						    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x53524149);
+						    vlTOPp->top__DOT__Decoder__DOT__alu_op = 7U;
 						}
 					    }
 					}
@@ -728,7 +793,7 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__5(Vtop__Syms* __restrict vlSymsp) {
 			}
 		    }
 		}
-		VL_WRITEF("%x :%x %s x%2#, x%2#, %11d\n",
+		VL_WRITEF("I-type %x :%x %s x%2#, x%2#, %11d\n",
 			  32,vlTOPp->top__DOT__Decoder__DOT__address,
 			  32,vlTOPp->top__DOT__if_instr,
 			  64,vlTOPp->top__DOT__Decoder__DOT__decoded_instruction,
@@ -737,24 +802,36 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__5(Vtop__Syms* __restrict vlSymsp) {
 			  32,vlTOPp->top__DOT__Decoder__DOT__imm_signed);
 	    } else {
 		if (VL_UNLIKELY((0x1bU == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
+		    vlTOPp->top__DOT__Decoder__DOT__imm_signed 
+			= ((0xfffff000U & (VL_NEGATE_I((IData)(
+							       (1U 
+								& (vlTOPp->top__DOT__if_instr 
+								   >> 0x1fU)))) 
+					   << 0xcU)) 
+			   | (0xfffU & (vlTOPp->top__DOT__if_instr 
+					>> 0x14U)));
 		    if ((0U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
 			vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4144444957);
+			vlTOPp->top__DOT__Decoder__DOT__alu_op = 2U;
 		    } else {
 			if ((1U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
 			    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x534c4c4957);
+			    vlTOPp->top__DOT__Decoder__DOT__alu_op = 4U;
 			} else {
 			    if ((5U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
 				if ((0U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct7))) {
 				    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x53524c4957);
+				    vlTOPp->top__DOT__Decoder__DOT__alu_op = 5U;
 				} else {
 				    if ((0x20U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct7))) {
 					vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x5352414957);
+					vlTOPp->top__DOT__Decoder__DOT__alu_op = 7U;
 				    }
 				}
 			    }
 			}
 		    }
-		    VL_WRITEF("%x :%x %s x%2#, x%2#, %11d\n",
+		    VL_WRITEF("I-Type %x :%x %s x%2#, x%2#, %11d\n",
 			      32,vlTOPp->top__DOT__Decoder__DOT__address,
 			      32,vlTOPp->top__DOT__if_instr,
 			      64,vlTOPp->top__DOT__Decoder__DOT__decoded_instruction,
@@ -762,125 +839,157 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__5(Vtop__Syms* __restrict vlSymsp) {
 			      5,vlTOPp->top__DOT__Decoder__DOT__rs1,
 			      32,vlTOPp->top__DOT__Decoder__DOT__imm_signed);
 		} else {
-		    if (VL_UNLIKELY((0x23U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
-			vlTOPp->top__DOT__Decoder__DOT__imm_signed 
-			    = ((0xfffff000U & (VL_NEGATE_I((IData)(
-								   (1U 
-								    & (vlTOPp->top__DOT__if_instr 
-								       >> 0x1fU)))) 
-					       << 0xcU)) 
-			       | ((0xfe0U & (vlTOPp->top__DOT__if_instr 
-					     >> 0x14U)) 
-				  | (0x1fU & (vlTOPp->top__DOT__if_instr 
-					      >> 7U))));
-			if ((0U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
-			    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x5342);
-			} else {
-			    if ((1U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
-				vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x5348);
-			    } else {
-				if ((2U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
-				    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x5357);
-				} else {
-				    if ((3U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
-					vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x5344);
-				    }
-				}
-			    }
-			}
-			VL_WRITEF("%x :%x %s x%2#, %11d(x%2#)\n",
+		    if (VL_UNLIKELY((0x67U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
+			VL_WRITEF("I-Type %x :%x     JALR x%2#, x%2#, %11d\n",
 				  32,vlTOPp->top__DOT__Decoder__DOT__address,
 				  32,vlTOPp->top__DOT__if_instr,
-				  64,vlTOPp->top__DOT__Decoder__DOT__decoded_instruction,
-				  5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rs2),
-				  32,vlTOPp->top__DOT__Decoder__DOT__imm_signed,
-				  5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rs1));
+				  5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rd),
+				  5,vlTOPp->top__DOT__Decoder__DOT__rs1,
+				  32,vlTOPp->top__DOT__Decoder__DOT__imm_signed);
+			vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4a414c52);
+			vlTOPp->top__DOT__Decoder__DOT__alu_op = 2U;
 		    } else {
-			if (VL_UNLIKELY((0x63U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
-			    vlTOPp->top__DOT__Decoder__DOT__imm_signed 
-				= ((0xffffe000U & (
-						   VL_NEGATE_I((IData)(
-								       (1U 
-									& (vlTOPp->top__DOT__if_instr 
-									   >> 0x1fU)))) 
-						   << 0xdU)) 
-				   | ((0x1000U & (vlTOPp->top__DOT__if_instr 
-						  >> 0x13U)) 
-				      | ((0x800U & 
-					  (vlTOPp->top__DOT__if_instr 
-					   << 4U)) 
-					 | ((0x7e0U 
-					     & (vlTOPp->top__DOT__if_instr 
-						>> 0x14U)) 
-					    | (0x1eU 
-					       & (vlTOPp->top__DOT__if_instr 
-						  >> 7U))))));
-			    if ((0U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
-				vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x424551);
+			if (VL_UNLIKELY((3U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
+			    if ((3U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+				vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4c44);
 			    } else {
-				if ((1U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
-				    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x424e45);
+				if ((2U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+				    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4c57);
 				} else {
 				    if ((4U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
-					vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x424c54);
-				    } else {
-					if ((5U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
-					    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x424745);
-					}
+					vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4c4255);
 				    }
 				}
 			    }
-			    VL_WRITEF("%x :%x %s x%2#, x%2#, %11d\n",
+			    vlTOPp->top__DOT__Decoder__DOT__alu_op = 0U;
+			    VL_WRITEF("I-Type %x :%x %s x%2#, %11d(x%2#)\n",
 				      32,vlTOPp->top__DOT__Decoder__DOT__address,
 				      32,vlTOPp->top__DOT__if_instr,
 				      64,vlTOPp->top__DOT__Decoder__DOT__decoded_instruction,
-				      5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rs1),
-				      5,vlTOPp->top__DOT__Decoder__DOT__rs2,
-				      32,vlTOPp->top__DOT__Decoder__DOT__imm_signed);
+				      5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rd),
+				      32,vlTOPp->top__DOT__Decoder__DOT__imm_signed,
+				      5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rs1));
 			} else {
-			    if (VL_UNLIKELY((0x37U 
+			    if (VL_UNLIKELY((0x23U 
 					     == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
 				vlTOPp->top__DOT__Decoder__DOT__imm_signed 
-				    = (0xfffff000U 
-				       & vlTOPp->top__DOT__if_instr);
-				vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4c5549);
-				VL_WRITEF("%x :%x      LUI x%2#, %11d\n",
+				    = ((0xfffff000U 
+					& (VL_NEGATE_I((IData)(
+							       (1U 
+								& (vlTOPp->top__DOT__if_instr 
+								   >> 0x1fU)))) 
+					   << 0xcU)) 
+				       | ((0xfe0U & 
+					   (vlTOPp->top__DOT__if_instr 
+					    >> 0x14U)) 
+					  | (0x1fU 
+					     & (vlTOPp->top__DOT__if_instr 
+						>> 7U))));
+				vlTOPp->top__DOT__Decoder__DOT__alu_op = 2U;
+				if ((0U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+				    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x5342);
+				} else {
+				    if ((1U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+					vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x5348);
+				    } else {
+					if ((2U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+					    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x5357);
+					} else {
+					    if ((3U 
+						 == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+						vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x5344);
+					    }
+					}
+				    }
+				}
+				VL_WRITEF("S-Type %x :%x %s x%2#, %11d(x%2#)\n",
 					  32,vlTOPp->top__DOT__Decoder__DOT__address,
 					  32,vlTOPp->top__DOT__if_instr,
-					  5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rd),
-					  32,vlTOPp->top__DOT__Decoder__DOT__imm_signed);
+					  64,vlTOPp->top__DOT__Decoder__DOT__decoded_instruction,
+					  5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rs2),
+					  32,vlTOPp->top__DOT__Decoder__DOT__imm_signed,
+					  5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rs1));
 			    } else {
-				if ((0x17U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) {
+				if ((0x63U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode))) {
 				    vlTOPp->top__DOT__Decoder__DOT__imm_signed 
-					= (0xfffff000U 
-					   & vlTOPp->top__DOT__if_instr);
-				    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4155495043);
-				    VL_WRITEF("%x :%x    AUIPC x%2#, %11d\n",
-					      32,vlTOPp->top__DOT__Decoder__DOT__address,
-					      32,vlTOPp->top__DOT__if_instr,
-					      5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rd),
-					      32,vlTOPp->top__DOT__Decoder__DOT__imm_signed);
-				} else {
-				    vlTOPp->top__DOT__Decoder__DOT__imm_signed 
-					= ((0xffe00000U 
+					= ((0xffffe000U 
 					    & (VL_NEGATE_I((IData)(
 								   (1U 
 								    & (vlTOPp->top__DOT__if_instr 
 								       >> 0x1fU)))) 
-					       << 0x15U)) 
-					   | ((0x100000U 
+					       << 0xdU)) 
+					   | ((0x1000U 
 					       & (vlTOPp->top__DOT__if_instr 
-						  >> 0xbU)) 
-					      | ((0xff000U 
-						  & vlTOPp->top__DOT__if_instr) 
-						 | ((0x800U 
+						  >> 0x13U)) 
+					      | ((0x800U 
+						  & (vlTOPp->top__DOT__if_instr 
+						     << 4U)) 
+						 | ((0x7e0U 
 						     & (vlTOPp->top__DOT__if_instr 
-							>> 9U)) 
-						    | (0x7feU 
+							>> 0x14U)) 
+						    | (0x1eU 
 						       & (vlTOPp->top__DOT__if_instr 
-							  >> 0x14U))))));
-				    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4a414c);
-				    VL_WRITEF("%x :%x      JAL x%2#, %11d\n",
+							  >> 7U))))));
+				    vlTOPp->top__DOT__Decoder__DOT__imm_unsigned 
+					= ((0x800U 
+					    & (vlTOPp->top__DOT__if_instr 
+					       << 4U)) 
+					   | ((0x7e0U 
+					       & (vlTOPp->top__DOT__if_instr 
+						  >> 0x14U)) 
+					      | (0x1eU 
+						 & (vlTOPp->top__DOT__if_instr 
+						    >> 7U))));
+				    if ((0U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+					vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x424551);
+					vlTOPp->top__DOT__Decoder__DOT__alu_op = 8U;
+				    } else {
+					if ((1U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+					    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x424e45);
+					    vlTOPp->top__DOT__Decoder__DOT__alu_op = 9U;
+					} else {
+					    if ((4U 
+						 == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+						vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x424c54);
+						vlTOPp->top__DOT__Decoder__DOT__alu_op = 0xaU;
+					    } else {
+						if (
+						    (5U 
+						     == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+						    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x424745);
+						    vlTOPp->top__DOT__Decoder__DOT__alu_op = 0xbU;
+						} else {
+						    if (
+							(6U 
+							 == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+							vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x424c5455);
+							vlTOPp->top__DOT__Decoder__DOT__alu_op = 0xcU;
+						    } else {
+							if (
+							    (7U 
+							     == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
+							    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x42474555);
+							    vlTOPp->top__DOT__Decoder__DOT__alu_op = 0xdU;
+							}
+						    }
+						}
+					    }
+					}
+				    }
+				    VL_WRITEF("B-Type %x :%x %s x%2#, x%2#, %11d\n",
+					      32,vlTOPp->top__DOT__Decoder__DOT__address,
+					      32,vlTOPp->top__DOT__if_instr,
+					      64,vlTOPp->top__DOT__Decoder__DOT__decoded_instruction,
+					      5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rs1),
+					      5,vlTOPp->top__DOT__Decoder__DOT__rs2,
+					      32,vlTOPp->top__DOT__Decoder__DOT__imm_signed);
+				} else {
+				    vlTOPp->top__DOT__Decoder__DOT__imm_signed 
+					= (0xfffff000U 
+					   & vlTOPp->top__DOT__if_instr);
+				    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4c5549);
+				    vlTOPp->top__DOT__Decoder__DOT__alu_op = 0U;
+				    VL_WRITEF("%x :%x      LUI x%2#, %11d\n",
 					      32,vlTOPp->top__DOT__Decoder__DOT__address,
 					      32,vlTOPp->top__DOT__if_instr,
 					      5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rd),
@@ -893,34 +1002,41 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__5(Vtop__Syms* __restrict vlSymsp) {
 	    }
 	}
     } else {
-	if (VL_UNLIKELY((0x67U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
-	    VL_WRITEF("%x :%x     JALR x%2#, x%2#, %11d\n",
+	if (VL_UNLIKELY((0x17U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
+	    vlTOPp->top__DOT__Decoder__DOT__imm_signed 
+		= (0xfffff000U & vlTOPp->top__DOT__if_instr);
+	    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4155495043);
+	    vlTOPp->top__DOT__Decoder__DOT__alu_op = 2U;
+	    VL_WRITEF("U-Type %x :%x    AUIPC x%2#, %11d\n",
 		      32,vlTOPp->top__DOT__Decoder__DOT__address,
 		      32,vlTOPp->top__DOT__if_instr,
 		      5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rd),
-		      5,vlTOPp->top__DOT__Decoder__DOT__rs1,
 		      32,vlTOPp->top__DOT__Decoder__DOT__imm_signed);
-	    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4a414c52);
 	} else {
-	    if (VL_UNLIKELY((3U == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
-		if ((3U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
-		    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4c44);
-		} else {
-		    if ((2U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
-			vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4c57);
-		    } else {
-			if ((4U == (IData)(vlTOPp->top__DOT__Decoder__DOT__funct3))) {
-			    vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4c4255);
-			}
-		    }
-		}
-		VL_WRITEF("%x :%x %s x%2#, %11d(x%2#)\n",
+	    if (VL_UNLIKELY((0x6fU == (IData)(vlTOPp->top__DOT__Decoder__DOT__opcode)))) {
+		vlTOPp->top__DOT__Decoder__DOT__imm_signed 
+		    = ((0xffe00000U & (VL_NEGATE_I((IData)(
+							   (1U 
+							    & (vlTOPp->top__DOT__if_instr 
+							       >> 0x1fU)))) 
+				       << 0x15U)) | 
+		       ((0x100000U & (vlTOPp->top__DOT__if_instr 
+				      >> 0xbU)) | (
+						   (0xff000U 
+						    & vlTOPp->top__DOT__if_instr) 
+						   | ((0x800U 
+						       & (vlTOPp->top__DOT__if_instr 
+							  >> 9U)) 
+						      | (0x7feU 
+							 & (vlTOPp->top__DOT__if_instr 
+							    >> 0x14U))))));
+		vlTOPp->top__DOT__Decoder__DOT__decoded_instruction = VL_ULL(0x4a414c);
+		vlTOPp->top__DOT__Decoder__DOT__alu_op = 0xeU;
+		VL_WRITEF("J-Type %x :%x      JAL x%2#, %11d\n",
 			  32,vlTOPp->top__DOT__Decoder__DOT__address,
 			  32,vlTOPp->top__DOT__if_instr,
-			  64,vlTOPp->top__DOT__Decoder__DOT__decoded_instruction,
 			  5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rd),
-			  32,vlTOPp->top__DOT__Decoder__DOT__imm_signed,
-			  5,(IData)(vlTOPp->top__DOT__Decoder__DOT__rs1));
+			  32,vlTOPp->top__DOT__Decoder__DOT__imm_signed);
 	    }
 	}
     }
@@ -1054,6 +1170,7 @@ void Vtop::_ctor_var_reset() {
     top__DOT__Decoder__DOT__funct7 = VL_RAND_RESET_I(7);
     top__DOT__Decoder__DOT__funct3 = VL_RAND_RESET_I(3);
     top__DOT__Decoder__DOT__imm_signed = VL_RAND_RESET_I(32);
+    top__DOT__Decoder__DOT__imm_unsigned = VL_RAND_RESET_I(32);
     top__DOT__Decoder__DOT__decoded_instruction = VL_RAND_RESET_Q(64);
     top__DOT__Decoder__DOT__alu_op = VL_RAND_RESET_I(4);
     __Vclklast__TOP__clk = VL_RAND_RESET_I(1);

@@ -138,3 +138,219 @@ id_reg_imm_unsigned	no	    no	    no	    no	    yes	    no
 id_reg_opcode_out	yes	    yes	    yes	    yes	    yes	    yes
 id_reg_funct7_out	yes	    no	    no	    no	    no	    no
 id_reg_funct3_out	yes	    yes	    yes	    yes	    no	    no
+
+//////////////////////////////////////////
+PSEUDOINSTRUCTION
+1. LI (Load Immediate)
+Pseudo-instruction: li rd, imm
+
+Equivalent instruction:
+
+For 12-bit immediate: ADDI rd, x0, imm
+
+For larger immediate values: A combination of LUI and ADDI (for 20-bit and 32-bit immediate values)
+
+Example:
+
+li x5, 123
+Expands to:
+ADDI x5, x0, 123
+
+li x5, 0x12345678
+Expands to:
+
+nginx
+Copy
+Edit
+LUI x5, 0x12345
+ADDI x5, x5, 0x678
+2. MOVE
+Pseudo-instruction: move rd, rs
+
+Equivalent instruction: ADD rd, rs, x0
+
+Example:
+
+move x5, x6
+Expands to:
+ADD x5, x6, x0
+
+3. NEG
+Pseudo-instruction: neg rd, rs
+
+Equivalent instruction: SUB rd, x0, rs
+
+Example:
+
+neg x5, x6
+Expands to:
+SUB x5, x0, x6
+
+4. NOT
+Pseudo-instruction: not rd, rs
+
+Equivalent instruction: XORI rd, rs, -1
+
+Example:
+
+not x5, x6
+Expands to:
+XORI x5, x6, -1
+
+5. MV (Move Immediate)
+Pseudo-instruction: mv rd, rs
+
+Equivalent instruction: ADD rd, rs, x0
+
+Example:
+
+mv x5, x6
+Expands to:
+ADD x5, x6, x0
+
+6. LI (Load Immediate)
+Pseudo-instruction: li rd, imm
+
+Equivalent instruction:
+
+For 12-bit immediate: ADDI rd, x0, imm
+
+For larger immediate values: A combination of LUI and ADDI (for 20-bit and 32-bit immediate values)
+
+Example:
+
+li x5, 0x7FFFFFFF
+Expands to:
+
+nginx
+Copy
+Edit
+LUI x5, 0x7FFFF
+ADDI x5, x5, 0xFFFF
+7. JALR (Jump and Link Register)
+Pseudo-instruction: jalr x0, rs1, imm
+
+Equivalent instruction: JALR x0, rs1, imm
+
+Example:
+
+jalr x0, x1, 4 Expands to:
+JALR x0, x1, 4
+
+8. BEQZ (Branch if Equal to Zero)
+Pseudo-instruction: beqz rs, label
+
+Equivalent instruction: BEQ rs, x0, label
+
+Example:
+
+beqz x5, label Expands to:
+BEQ x5, x0, label
+
+9. BNEZ (Branch if Not Equal to Zero)
+Pseudo-instruction: bnez rs, label
+
+Equivalent instruction: BNE rs, x0, label
+
+Example:
+
+bnez x5, label Expands to:
+BNE x5, x0, label
+
+10. SEQZ (Set if Equal to Zero)
+Pseudo-instruction: seqz rd, rs
+
+Equivalent instruction: SLTIU rd, rs, 1
+
+Example:
+
+seqz x5, x6 Expands to:
+SLTIU x5, x6, 1
+
+11. SNEZ (Set if Not Equal to Zero)
+Pseudo-instruction: snez rd, rs
+
+Equivalent instruction: SLTIU rd, rs, 1
+
+Example:
+
+snez x5, x6 Expands to:
+SLTIU x5, x6, 1
+
+12. SLTIU (Set Less Than Immediate Unsigned)
+Pseudo-instruction: sltiu rd, rs, imm
+
+Equivalent instruction: SLTIU rd, rs, imm
+
+Example:
+
+sltiu x5, x6, 10 Expands to:
+SLTIU x5, x6, 10
+
+13. BGEZ (Branch if Greater Than or Equal to Zero)
+Pseudo-instruction: bgez rs, label
+
+Equivalent instruction: BGE rs, x0, label
+
+Example:
+
+bgez x5, label Expands to:
+BGE x5, x0, label
+
+14. BLEZ (Branch if Less Than or Equal to Zero)
+Pseudo-instruction: blez rs, label
+
+Equivalent instruction: BLE rs, x0, label
+
+Example:
+
+blez x5, label Expands to:
+BLE x5, x0, label
+
+15. BGTZ (Branch if Greater Than Zero)
+Pseudo-instruction: bgtz rs, label
+
+Equivalent instruction: BGT rs, x0, label
+
+Example:
+
+bgtz x5, label Expands to:
+BGT x5, x0, label
+
+16. BLTZ (Branch if Less Than Zero)
+Pseudo-instruction: bltz rs, label
+
+Equivalent instruction: BLT rs, x0, label
+
+Example:
+
+bltz x5, label Expands to:
+BLT x5, x0, label
+
+17. LI (Load Immediate)
+Pseudo-instruction: li rd, imm
+
+Equivalent instruction:
+
+For 12-bit immediate: ADDI rd, x0, imm
+
+For larger immediate values: A combination of LUI and ADDI (for 20-bit and 32-bit immediate values)
+
+
+imm_signed = {
+    {19{input_bin[31]}},  // Sign extension for 32-bit signed number (imm[12])
+    input_bin[31],        // imm[12]
+    input_bin[7],         // imm[11]
+    input_bin[30:25],     // imm[10:5]
+    input_bin[11:8],      // imm[4:1]
+    1'b0                  // imm[0] = 0 (for alignment)
+};
+
+{19{input_bin[31]}} Repeat the value input_bin[31] 19 times and concatenate the result.
+So, if input_bin[31] = 1, then:
+
+verilog
+Copy
+Edit
+19{input_bin[31]}  → 19'b1111111111111111111
+You're doing sign extension of the most significant bit (bit 31) to ensure imm_signed becomes a signed 32-bit value.
