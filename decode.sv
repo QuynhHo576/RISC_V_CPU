@@ -6,7 +6,8 @@ module Decoder (
     output logic signed [31:0]id_reg_imm_signed,
     output logic unsigned [31:0] id_reg_imm_unsigned,
     output logic [6:0]  id_reg_opcode_out, id_reg_funct7_out,
-    output logic [2:0]  id_reg_funct3_out
+    output logic [2:0]  id_reg_funct3_out,
+    output logic [3:0]  id_alu_op_out
 
 );
 
@@ -16,6 +17,7 @@ module Decoder (
     logic [2:0]  funct3;
     logic signed [31:0] imm_signed;
     logic [63:0] decoded_instruction;
+    logic [3:0]  alu_op;
 
     always_comb begin
             opcode = input_bin[6:0];
@@ -27,19 +29,18 @@ module Decoder (
             imm_signed    = input_bin[31:20];
 
             case (opcode)
-            /* R-type
-            ID Stage: Decode instruction (opcode, rs1, rs2, funct3, funct7)
-                Control Unit generates: alu_op, reg_write
-                Output: rs1, rs2, rd, funct3, funct7, alu_op
+            /* R-type Datapath
+            ID Stage: Decode instruction (opcode, rs1, rs2, funct3, funct7, rd)
+                Output: rs1, rs2, rd, funct3, funct7, opcode, alu_op 
             Register File: 
                 Inputs: rs1, rs2 (from ID stage)
                 Outputs: reg_data1, reg_data2
             ALU Control:
-                Inputs: alu_op, funct3, funct7
-                Output: alu_ctrl (ALU operation)
+                Inputs: opcode, funct3, funct7
+                Output: reg_write, alu_op (ALU operation)
             ALU:
-                Inputs: reg_data1, reg_data2, alu_ctrl
-                Output: alu_result
+                Inputs: reg_data1, reg_data2, alu_op
+                Output: alu_result 
             EX/MEM Register: 
                 Inputs: alu_result, rd, reg_write
                 Outputs: EX_MEM_alu_result, EX_MEM_rd, EX_MEM_reg_write
@@ -56,25 +57,68 @@ module Decoder (
                 7'b0110011: begin // R-type
                     case (funct3)
                         3'b000: begin // ADD, SUB
-                            if (funct7 == 7'b0000000)
+                            if (funct7 == 7'b0000000) begin
                                 decoded_instruction = "ADD";
-                            else if (funct7 == 7'b0100000)
+                                alu_op = 4'b0010;  // ADD
+                            end else if (funct7 == 7'b0100000) begin
                                 decoded_instruction = "SUB";
+                                alu_op = 4'b0110;  // SUB
+                            end
                         end
-                        3'b111: decoded_instruction = "AND";
-                        3'b110: decoded_instruction = "OR";
-                        3'b100: decoded_instruction = "XOR";
-                        3'b001: decoded_instruction = "SLL";
-                        3'b101: begin
-                            if (funct7 == 7'b0000000)
+                        3'b111: begin // AND
+                            decoded_instruction = "AND";
+                            alu_op = 4'b0101;  // AND
+                        end
+                        3'b110: begin // OR
+                            decoded_instruction = "OR";
+                            alu_op = 4'b0011;  // OR
+                        end
+                        3'b100: begin // XOR
+                            decoded_instruction = "XOR";
+                            alu_op = 4'b0001;  // XOR
+                        end
+                        3'b001: begin // SLL (Shift Left Logical)
+                            decoded_instruction = "SLL";
+                            alu_op = 4'b0100;  // SLL
+                        end
+                        3'b101: begin // SRL, SRA (Shift Right Logical/Arithmetic)
+                            if (funct7 == 7'b0000000) begin
                                 decoded_instruction = "SRL";
-                            else if (funct7 == 7'b0100000)
+                                alu_op = 4'b0101;  // SRL
+                            end else if (funct7 == 7'b0100000) begin
                                 decoded_instruction = "SRA";
+                                alu_op = 4'b1011;  // SRA
+                            end
                         end
                     endcase
-                    $display("%x :%h %s x%d, x%d, x%d", address, input_bin, decoded_instruction, rd, rs1, rs2);
+                    $display("R-type %x :%h %s x%d, x%d, x%d", address, input_bin, decoded_instruction, rd, rs1, rs2);
                 end
 
+                /* I-type Datapath
+                ID Stage: Decode instruction (opcode, rs1, imm, funct3, rd)
+                    Output: rs1, rd, imm, funct3, opcode, alu_op 
+                Register File: 
+                    Inputs: rs1 (from ID stage)
+                    Outputs: reg_data1
+                ALU Control:
+                    Inputs: opcode, funct3
+                    Output: alu_op (ALU operation)
+                ALU:
+                    Inputs: reg_data1, imm, alu_op
+                    Output: alu_result 
+                EX/MEM Register: 
+                    Inputs: alu_result, rd, reg_write
+                    Outputs: EX_MEM_alu_result, EX_MEM_rd, EX_MEM_reg_write
+                Memory: 
+                    Inputs: EX_MEM_alu_result, EX_MEM_rd, EX_MEM_reg_write
+                    Output: None (I-type doesn't access memory)
+                MEM/WB Register:
+                    Inputs: EX_MEM_alu_result, EX_MEM_rd, EX_MEM_reg_write
+                    Outputs: MEM_WB_alu_result, MEM_WB_rd, MEM_WB_reg_write
+                Write Back: 
+                    Inputs: MEM_WB_alu_result, MEM_WB_rd, MEM_WB_reg_write
+                    Output: register_file[MEM_WB_rd] (write back ALU result)
+                */
                 7'b0010011: begin // I-type (ALU)
                     imm_signed = {{20{input_bin[31]}}, input_bin[31:20]};
                     case (funct3)
@@ -184,4 +228,6 @@ module Decoder (
     assign id_reg_opcode_out = opcode;
     assign id_reg_funct7_out = funct7;
     assign id_reg_funct3_out = funct3;
+    assign id_alu_op_out = alu_op;
+
 endmodule

@@ -87,9 +87,10 @@ VL_MODULE(Vtop) {
     VL_SIG8(top__DOT__Decoder__DOT__opcode,6,0);
     VL_SIG8(top__DOT__Decoder__DOT__funct7,6,0);
     VL_SIG8(top__DOT__Decoder__DOT__funct3,2,0);
+    VL_SIG8(top__DOT__Decoder__DOT__alu_op,3,0);
+    //char	__VpadToAlign127[1];
     VL_SIG16(top__DOT__fetch_inst__DOT__index,9,0);
     VL_SIG16(top__DOT__fetch_inst__DOT__pc_fetch,9,0);
-    //char	__VpadToAlign130[2];
     VL_SIG(top__DOT__if_instr,31,0);
     VL_SIG(top__DOT__Decoder__DOT__address,31,0);
     VL_SIG(top__DOT__Decoder__DOT__imm_signed,31,0);
