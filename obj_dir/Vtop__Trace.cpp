@@ -78,7 +78,7 @@ void Vtop::traceChgThis__4(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, u
 	vcdp->chgBus  (c+5,(vlTOPp->top__DOT__Decoder__DOT__rs1),5);
 	vcdp->chgBus  (c+6,(vlTOPp->top__DOT__Decoder__DOT__rs2),5);
 	vcdp->chgBus  (c+7,(vlTOPp->top__DOT__Decoder__DOT__rd),5);
-	vcdp->chgBus  (c+8,(vlTOPp->top__DOT__Decoder__DOT__imm),32);
+	vcdp->chgBus  (c+8,(vlTOPp->top__DOT__Decoder__DOT__imm_signed),32);
 	vcdp->chgBus  (c+9,(vlTOPp->top__DOT__Decoder__DOT__opcode),7);
 	vcdp->chgBus  (c+10,(vlTOPp->top__DOT__Decoder__DOT__funct7),7);
 	vcdp->chgBus  (c+11,(vlTOPp->top__DOT__Decoder__DOT__funct3),3);

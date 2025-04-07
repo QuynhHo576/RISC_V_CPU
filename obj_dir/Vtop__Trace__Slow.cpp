@@ -200,7 +200,7 @@ void Vtop::traceInitThis__1(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, 
 	vcdp->declBus  (c+9,"top Decoder opcode",-1,6,0);
 	vcdp->declBus  (c+10,"top Decoder funct7",-1,6,0);
 	vcdp->declBus  (c+11,"top Decoder funct3",-1,2,0);
-	vcdp->declBus  (c+8,"top Decoder imm",-1,31,0);
+	vcdp->declBus  (c+8,"top Decoder imm_signed",-1,31,0);
 	vcdp->declQuad (c+12,"top Decoder decoded_instruction",-1,63,0);
     }
 }
@@ -217,7 +217,7 @@ void Vtop::traceFullThis__1(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, 
 	vcdp->fullBus  (c+5,(vlTOPp->top__DOT__Decoder__DOT__rs1),5);
 	vcdp->fullBus  (c+6,(vlTOPp->top__DOT__Decoder__DOT__rs2),5);
 	vcdp->fullBus  (c+7,(vlTOPp->top__DOT__Decoder__DOT__rd),5);
-	vcdp->fullBus  (c+8,(vlTOPp->top__DOT__Decoder__DOT__imm),32);
+	vcdp->fullBus  (c+8,(vlTOPp->top__DOT__Decoder__DOT__imm_signed),32);
 	vcdp->fullBus  (c+9,(vlTOPp->top__DOT__Decoder__DOT__opcode),7);
 	vcdp->fullBus  (c+10,(vlTOPp->top__DOT__Decoder__DOT__funct7),7);
 	vcdp->fullBus  (c+11,(vlTOPp->top__DOT__Decoder__DOT__funct3),3);

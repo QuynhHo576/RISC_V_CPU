@@ -92,7 +92,7 @@ VL_MODULE(Vtop) {
     //char	__VpadToAlign130[2];
     VL_SIG(top__DOT__if_instr,31,0);
     VL_SIG(top__DOT__Decoder__DOT__address,31,0);
-    VL_SIG(top__DOT__Decoder__DOT__imm,31,0);
+    VL_SIG(top__DOT__Decoder__DOT__imm_signed,31,0);
     VL_SIG64(top__DOT__pc,63,0);
     VL_SIG64(top__DOT__instruction,63,0);
     VL_SIG64(top__DOT__next_pc,63,0);

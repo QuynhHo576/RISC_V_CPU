@@ -125,3 +125,16 @@ Boundary = 64 bytes (aligned to 0x40)
 - Beat 5 → Addresses 0x28–0x2F  
 - Beat 6 → Addresses 0x30–0x37  
 - Beat 7 → Addresses 0x38–0x3F
+
+//////////////////////////////////////////
+
+
+Variable	        R-type	I-type	S-type	B-type	U-type	J-type
+id_reg_rs1_out	    yes	    yes	    yes	    yes	    no	    no
+id_reg_rs2_out	    yes	    no	    yes	    yes	    no	    no
+id_reg_rd_out	    yes	    yes	    no	    no	    yes	    yes
+id_reg_imm_signed	no	    yes	    yes	    yes	    no	    yes
+id_reg_imm_unsigned	no	    no	    no	    no	    yes	    no
+id_reg_opcode_out	yes	    yes	    yes	    yes	    yes	    yes
+id_reg_funct7_out	yes	    no	    no	    no	    no	    no
+id_reg_funct3_out	yes	    yes	    yes	    yes	    no	    no
