@@ -1,13 +1,29 @@
-module control_unit (
-    input logic [6:0] opcode, funct7,   // opcode from instruction
-    input logic [2:0]  funct3
-    output logic reg_write,          // control signal to write to register
-    output logic mem_read,           // control signal for memory read
-    output logic mem_write,          // control signal for memory write
-    output logic alu_src,            // ALU source control signal
-    output logic mem_to_reg
+module ControlUnit (
+    input logic [31:0] if_instr,           
+
+    output logic reg_write_control,          // control signal to write to register
+    output logic mem_read_control,           // control signal for memory read
+    output logic mem_write_control,          // control signal for memory write
+    output logic alu_src_control,            // ALU source control signal - use for when ALU need imm or rs2
+    output logic mem_to_reg_control
 );
+    //logic [4:0]  rs1, rs2, rd;
+    logic [6:0]  opcode, funct7;
+    logic [2:0]  funct3;
+    //logic signed [31:0] imm;
+    //logic signed [31:0] imm_signed;
+    //logic unsigned [31:0] imm_unsigned;
+    //logic [3:0]  alu_op;
+
+    logic reg_write;         
+    logic mem_read;           
+    logic mem_write;          
+    logic alu_src;            
+    logic mem_to_reg;
+
     always_comb begin
+        opcode = if_instr[6:0];
+
         case (opcode)
             7'b0110011: begin // R-type instructions
                 reg_write = 1;
@@ -81,7 +97,13 @@ module control_unit (
                 alu_src    = 1;       // Use immediate for address calculation (if ALU is used for jump address)
                 mem_to_reg = 0;       // Write ALU result (target address or PC+imm) to rd
             end                             
-
         endcase
     end
+
+    assign reg_write_control = reg_write;          
+    assign mem_read_control = mem_read;           
+    assign mem_write_control = mem_write;          
+    assign alu_src_control = alu_src;            
+    assign mem_to_reg_control = mem_to_reg;
+
 endmodule

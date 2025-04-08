@@ -5,6 +5,10 @@ module ALU (
     output reg [63:0] result
 );
     always @(*) begin
+        //logic [63:0] alu_operand_b;
+
+        //assign alu_operand_b = bsel ? imm : regB_data;
+
         case (alu_op)
             4'b0000: result = operand1 + operand2;  // ADD
             4'b0001: result = operand1 - operand2;  // SUB

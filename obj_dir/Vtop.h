@@ -77,10 +77,10 @@ VL_MODULE(Vtop) {
     
     // LOCAL SIGNALS
     // Internals; generally not touched by application code
-    VL_SIG8(top__DOT__state,2,0);
-    VL_SIG8(top__DOT__next_state,2,0);
     VL_SIG8(top__DOT__id_reg_funct7_out,6,0);
     VL_SIG8(top__DOT__id_reg_funct3_out,2,0);
+    VL_SIG8(top__DOT__mem_read_control,0,0);
+    VL_SIG8(top__DOT__mem_write_control,0,0);
     VL_SIG8(top__DOT__fetch_inst__DOT__state,2,0);
     VL_SIG8(top__DOT__fetch_inst__DOT__next_state,2,0);
     VL_SIG8(top__DOT__Decoder__DOT__rs1,4,0);
@@ -90,22 +90,24 @@ VL_MODULE(Vtop) {
     VL_SIG8(top__DOT__Decoder__DOT__funct7,6,0);
     VL_SIG8(top__DOT__Decoder__DOT__funct3,2,0);
     VL_SIG8(top__DOT__Decoder__DOT__alu_op,3,0);
+    VL_SIG8(top__DOT__ControlUnit__DOT__opcode,6,0);
+    VL_SIG8(top__DOT__ControlUnit__DOT__funct7,6,0);
+    VL_SIG8(top__DOT__ControlUnit__DOT__funct3,2,0);
+    VL_SIG8(top__DOT__ControlUnit__DOT__reg_write,0,0);
+    VL_SIG8(top__DOT__ControlUnit__DOT__mem_read,0,0);
+    VL_SIG8(top__DOT__ControlUnit__DOT__mem_write,0,0);
+    VL_SIG8(top__DOT__ControlUnit__DOT__alu_src,0,0);
+    VL_SIG8(top__DOT__ControlUnit__DOT__mem_to_reg,0,0);
     VL_SIG8(top__DOT__RegisterFile__DOT__reg_write_enable,0,0);
     VL_SIG16(top__DOT__fetch_inst__DOT__index,9,0);
     VL_SIG16(top__DOT__fetch_inst__DOT__pc_fetch,9,0);
-    //char	__VpadToAlign134[2];
+    //char	__VpadToAlign142[2];
     VL_SIG(top__DOT__if_instr,31,0);
     VL_SIG(top__DOT__Decoder__DOT__address,31,0);
-    VL_SIG(top__DOT__Decoder__DOT__imm,31,0);
     VL_SIG(top__DOT__Decoder__DOT__imm_signed,31,0);
     VL_SIG(top__DOT__Decoder__DOT__imm_unsigned,31,0);
     VL_SIG(top__DOT__RegisterFile__DOT__i,31,0);
-    VL_SIG64(top__DOT__pc,63,0);
-    VL_SIG64(top__DOT__instruction,63,0);
-    VL_SIG64(top__DOT__next_pc,63,0);
-    VL_SIG64(top__DOT__fetched_instr,63,0);
-    VL_SIG64(top__DOT__display_addr,63,0);
-    VL_SIG64(top__DOT__next_display_addr,63,0);
+    //char	__VpadToAlign164[4];
     VL_SIG64(top__DOT__regA_data,63,0);
     VL_SIG64(top__DOT__regB_data,63,0);
     VL_SIG64(top__DOT__fetch_inst__DOT__pc,63,0);
@@ -121,7 +123,7 @@ VL_MODULE(Vtop) {
     // LOCAL VARIABLES
     // Internals; generally not touched by application code
     VL_SIG8(__Vclklast__TOP__clk,0,0);
-    //char	__VpadToAlign4541[3];
+    //char	__VpadToAlign4501[3];
     VL_SIG(top__DOT__fetch_inst__DOT____Vlvbound1,31,0);
     VL_SIG(top__DOT__fetch_inst__DOT____Vlvbound2,31,0);
     VL_SIG(__Vm_traceActivity,31,0);

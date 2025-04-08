@@ -3,9 +3,9 @@ module Decoder (
     input  logic [31:0] address,
 
     output logic [4:0] id_reg_rs1_out, id_reg_rs2_out, id_reg_rd_out,
-    output logic [31:0]id_reg_imm_out,
-    //output logic signed [31:0]id_reg_imm_signed,
-    //output logic unsigned [31:0] id_reg_imm_unsigned,
+    //output logic [31:0]id_reg_imm_out,
+    output logic signed [31:0]id_reg_imm_signed,
+    output logic unsigned [31:0] id_reg_imm_unsigned,
     output logic [6:0]  id_reg_opcode_out, id_reg_funct7_out,
     output logic [2:0]  id_reg_funct3_out,
     output logic [3:0]  id_alu_op_out
@@ -16,7 +16,7 @@ module Decoder (
     logic [4:0]  rs1, rs2, rd;
     logic [6:0]  opcode, funct7;
     logic [2:0]  funct3;
-    logic signed [31:0] imm;
+    //logic signed [31:0] imm;
     logic signed [31:0] imm_signed;
     logic unsigned [31:0] imm_unsigned;
     logic [63:0] decoded_instruction;
@@ -62,7 +62,7 @@ module Decoder (
                 //R-type does not need imm so set any imm to zero
                     imm_signed      = 0;
                     imm_unsigned    = 0;
-                    imm             = 0;
+                    //imm             = 0;
                     case (funct3)
                         3'b000: begin // ADD, SUB
                             if (funct7 == 7'b0000000) begin
@@ -131,7 +131,7 @@ module Decoder (
                 //I-type arithmetic does not need imm so set any imm to zero
                     rs2 = 0;
                     imm_signed = {{20{input_bin[31]}}, input_bin[31:20]};
-                    imm = imm_signed;
+                    //imm = imm_signed;
                     funct7 = 0;
                     case (funct3)
                         3'b000: begin
@@ -168,14 +168,14 @@ module Decoder (
                             end
                         end
                     endcase
-                    $display("I-type %x :%h %s x%d, x%d, %d", address, input_bin, decoded_instruction, rd, rs1, imm);
+                    $display("I-type %x :%h %s x%d, x%d, %d", address, input_bin, decoded_instruction, rd, rs1, imm_signed);
                 end
 
                 // I-Type (64-bit specific immediate arithmetic) (opcode: 0011011)
                 7'b0011011: begin
                     rs2 = 0;
                     imm_signed = {{20{input_bin[31]}}, input_bin[31:20]};
-                    imm = imm_signed;
+                    //imm = imm_signed;
                     funct7 = 0;
                     case (funct3)
                         3'b000: begin
@@ -196,7 +196,7 @@ module Decoder (
                             end
                         end
                     endcase
-                    $display("I-Type %x :%h %s x%d, x%d, %d", address, input_bin, decoded_instruction, rd, rs1, imm);
+                    $display("I-Type %x :%h %s x%d, x%d, %d", address, input_bin, decoded_instruction, rd, rs1, imm_signed);
                 end
 
                 /* I-type JALR Datapath
@@ -228,11 +228,11 @@ module Decoder (
                 7'b1100111: begin
                     rs2 = 0;
                     imm_signed = {{20{input_bin[31]}}, input_bin[31:20]};
-                    imm = imm_signed;
+                    //imm = imm_signed;
                     funct7 = 0;
                     decoded_instruction = "JALR";  // Jump and link register
                     alu_op = 4'b0010;              // ALU operation for address calculation (addition)
-                    $display("I-Type %x :%h %s x%d, x%d, %d", address, input_bin, decoded_instruction, rd, rs1, imm);
+                    $display("I-Type %x :%h %s x%d, x%d, %d", address, input_bin, decoded_instruction, rd, rs1, imm_signed);
                 end
 
                 /* I-type Load Instruction Datapath
@@ -266,14 +266,14 @@ module Decoder (
                     rs2 = 0;
                     alu_op = 4'b0000;             
                     imm_signed = {{20{input_bin[31]}}, input_bin[31:20]};
-                    imm = imm_signed;
+                    //imm = imm_signed;
                     funct7 = 0;
                     case (funct3)
                         3'b011: decoded_instruction = "LD";  // Load doubleword (64-bit load)
                         3'b010: decoded_instruction = "LW";  // Load word
                         3'b100: decoded_instruction = "LBU"; // LBU
                     endcase
-                    $display("I-Type %x :%h %s x%d, %d(x%d)", address, input_bin, decoded_instruction, rd, imm, rs1);
+                    $display("I-Type %x :%h %s x%d, %d(x%d)", address, input_bin, decoded_instruction, rd, imm_signed, rs1);
                 end
                 /* S-type Datapath
                 ID Stage: Decode instruction (opcode, rs1, rs2, imm, funct3)
@@ -302,7 +302,7 @@ module Decoder (
                 7'b0100011: begin
                     rd = 0;
                     imm_signed = {{20{input_bin[31]}}, input_bin[31:25], input_bin[11:7]};
-                    imm = imm_signed;
+                    //imm = imm_signed;
                     funct7 = 0;
                     //Ex: input_bin = 32'hFFF50513
                     //bits [31:25] → upper part of the immediate = 1111111
@@ -317,7 +317,7 @@ module Decoder (
                         3'b010: decoded_instruction = "SW";  // Store word
                         3'b011: decoded_instruction = "SD";  // Store doubleword (64-bit store)
                     endcase
-                    $display("S-Type %x :%h %s x%d, %d(x%d)", address, input_bin, decoded_instruction, rs2, imm, rs1);
+                    $display("S-Type %x :%h %s x%d, %d(x%d)", address, input_bin, decoded_instruction, rs2, imm_signed, rs1);
                 end
 
                 /* B-type Datapath (Branch)
@@ -349,37 +349,40 @@ module Decoder (
                     case (funct3)
                         3'b000: begin
                             decoded_instruction = "BEQ";   // Branch if equal
-                            imm = imm_signed;
+                            //imm = imm_signed;
                             alu_op = 4'b1000;              // ALU operation for equality check
                 
                         end
                         3'b001: begin
                             decoded_instruction = "BNE";   // Branch if not equal
-                            imm = imm_signed;
+                            //imm = imm_signed;
                             alu_op = 4'b1001;              // ALU operation for inequality check
                         end
                         3'b100: begin
                             decoded_instruction = "BLT";   // Branch if less than (signed)
-                            imm = imm_signed;
+                            //imm = imm_signed;
                             alu_op = 4'b1010;              // ALU operation for signed less than
                         end
                         3'b101: begin
                             decoded_instruction = "BGE";   // Branch if greater or equal (signed)
-                            imm = imm_signed;
+                            //imm = imm_signed;
                             alu_op = 4'b1011;              // ALU operation for signed greater/equal
                         end
                         3'b110: begin
                             decoded_instruction = "BLTU";  // Branch if less than (unsigned)
-                            imm = imm_unsigned;
+                            //imm = imm_unsigned;
                             alu_op = 4'b1100;              // ALU operation for unsigned less than
                         end
                         3'b111: begin
                             decoded_instruction = "BGEU";  // Branch if greater or equal (unsigned)
-                            imm = imm_unsigned;
+                            //imm = imm_unsigned;
                             alu_op = 4'b1101;              // ALU operation for unsigned greater/equal
                         end
                     endcase
-                    $display("B-Type %x :%h %s x%d, x%d, %d", address, input_bin, decoded_instruction, rs1, rs2, imm);
+                    if (funct3 == 3'b110 || funct3 == 3'b111)
+                        $display("B-Type %x :%h %s x%d, x%d, %d", address, input_bin, decoded_instruction, rs1, rs2, imm_unsigned);
+                    else 
+                        $display("B-Type %x :%h %s x%d, x%d, %d", address, input_bin, decoded_instruction, rs1, rs2, imm_signed);
                 end
 
                 /* U-type Datapath (e.g., LUI, AUIPC)
@@ -408,23 +411,23 @@ module Decoder (
                     rs1 = 0;
                     rs2 = 0;
                     imm_signed = {input_bin[31:12], 12'b0}; 
-                    imm = imm_signed;
+                    //imm = imm_signed;
                     funct7 = 0;
                     funct3 = 0;
                     decoded_instruction = "LUI";  // Load upper immediate
                     alu_op = 4'b0000;             // ALU pass-through or immediate load (depends on implementation)
-                    $display("%x :%h %s x%d, %d", address, input_bin, decoded_instruction, rd, imm);
+                    $display("%x :%h %s x%d, %d", address, input_bin, decoded_instruction, rd, imm_signed);
                 end
                 7'b0010111: begin
                     rs1 = 0;
                     rs2 = 0;
                     imm_signed = {input_bin[31:12], 12'b0}; 
-                    imm = imm_signed;
+                    //imm = imm_signed;
                     funct7 = 0;
                     funct3 = 0;
                     decoded_instruction = "AUIPC";  // Add upper immediate to PC
                     alu_op = 4'b0010; 
-                    $display("U-Type %x :%h %s x%d, %d", address, input_bin, decoded_instruction, rd, imm);
+                    $display("U-Type %x :%h %s x%d, %d", address, input_bin, decoded_instruction, rd, imm_signed);
                 end
 
                 /* J-type Datapath (e.g., JAL)
@@ -455,12 +458,12 @@ module Decoder (
                     rs1 = 0;
                     rs2 = 0;
                     imm_signed = {{11{input_bin[31]}}, input_bin[31], input_bin[19:12], input_bin[20], input_bin[30:21], 1'b0};
-                    imm = imm_signed;
+                    //imm = imm_signed;
                     funct7 = 0;
                     funct3 = 0;
                     decoded_instruction = "JAL";  // Jump and link
                     alu_op = 4'b1110; 
-                    $display("J-Type %x :%h %s x%d, %d", address, input_bin, decoded_instruction, rd, imm);
+                    $display("J-Type %x :%h %s x%d, %d", address, input_bin, decoded_instruction, rd, imm_signed);
                 end
             endcase
     end
@@ -468,9 +471,9 @@ module Decoder (
     assign id_reg_rs1_out = rs1;
     assign id_reg_rs2_out = rs2;
     assign id_reg_rd_out = rd;
-    assign id_reg_imm_out = imm;
-    //assign id_reg_imm_signed = imm_signed;
-    //assign id_reg_imm_unsigned = imm_signed;
+    //assign id_reg_imm_out = imm;
+    assign id_reg_imm_signed = imm_signed;
+    assign id_reg_imm_unsigned = imm_unsigned;
     assign id_reg_opcode_out = opcode;
     assign id_reg_funct7_out = funct7;
     assign id_reg_funct3_out = funct3;
