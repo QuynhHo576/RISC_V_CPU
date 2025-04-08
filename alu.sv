@@ -12,7 +12,7 @@ module ALU (
             4'b0010: result = ex_operand1_in & ex_operand2_in;  // AND
             4'b0011: result = ex_operand1_in | ex_operand2_in;  // OR
             4'b0100: result = ex_operand1_in ^ ex_operand2_in;  // XOR
-            4'b0101: result = ex_operand1_in << ex_operand2_in[5:0]; // SLL
+            4'b0101: result = ex_operand1_in << ex_operand2_in[5:0]; //SLL
             4'b0110: result = ex_operand1_in >> ex_operand2_in[5:0]; // SRL
             4'b0111: result = $signed(ex_operand1_in) >>> ex_operand2_in[5:0]; // SRAI
             4'b1000: result = (ex_operand1_in < ex_operand2_in) ? 64'b1 : 64'b0;  // SLT Set Less Than (signed)

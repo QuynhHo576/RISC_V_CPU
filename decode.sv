@@ -64,42 +64,142 @@ module Decoder (
                     imm_unsigned    = 0;
                     //imm             = 0;
                     case (funct3)
-                        3'b000: begin // ADD, SUB
+                        3'b000: begin // ADD, SUB, MUL
                             if (funct7 == 7'b0000000) begin
                                 decoded_instruction = "ADD";
-                                alu_op = 4'b0010;  // ADD
+                                alu_op = 4'b0000;
                             end else if (funct7 == 7'b0100000) begin
                                 decoded_instruction = "SUB";
-                                alu_op = 4'b0110;  // SUB
+                                alu_op = 4'b0001;
+                            end else if (funct7 == 7'b0000001) begin
+                                decoded_instruction = "MUL";
+                                alu_op = 4'b1010;
                             end
                         end
-                        3'b111: begin // AND
-                            decoded_instruction = "AND";
-                            alu_op = 4'b0101;  // AND
+                        3'b001: begin // SLL, MULH
+                            if (funct7 == 7'b0000000) begin
+                                decoded_instruction = "SLL";
+                                alu_op = 4'b0101;
+                            end else if (funct7 == 7'b0000001) begin
+                                decoded_instruction = "MULH";
+                                alu_op = 4'b1011;
+                            end
                         end
-                        3'b110: begin // OR
-                            decoded_instruction = "OR";
-                            alu_op = 4'b0011;  // OR
+                        3'b010: begin // SLT, MULHSU
+                            if (funct7 == 7'b0000000) begin
+                                decoded_instruction = "SLT";
+                                alu_op = 4'b1000;
+                            end else if (funct7 == 7'b0000001) begin
+                                decoded_instruction = "MULHSU";
+                                alu_op = 4'b1011; // Assume using the same high-multiply path
+                            end
                         end
-                        3'b100: begin // XOR
-                            decoded_instruction = "XOR";
-                            alu_op = 4'b0001;  // XOR
+                        3'b011: begin // SLTU, MULHU
+                            if (funct7 == 7'b0000000) begin
+                                decoded_instruction = "SLTU";
+                                alu_op = 4'b1001;
+                            end else if (funct7 == 7'b0000001) begin
+                                decoded_instruction = "MULHU";
+                                alu_op = 4'b1011;
+                            end
                         end
-                        3'b001: begin // SLL (Shift Left Logical)
-                            decoded_instruction = "SLL";
-                            alu_op = 4'b0100;  // SLL
+                        3'b100: begin // XOR, DIV
+                            if (funct7 == 7'b0000000) begin
+                                decoded_instruction = "XOR";
+                                alu_op = 4'b0100;
+                            end else if (funct7 == 7'b0000001) begin
+                                decoded_instruction = "DIV";
+                                alu_op = 4'b1100;
+                            end
                         end
-                        3'b101: begin // SRL, SRA (Shift Right Logical/Arithmetic)
+                        3'b101: begin // SRL, SRA, DIVU
                             if (funct7 == 7'b0000000) begin
                                 decoded_instruction = "SRL";
-                                alu_op = 4'b0101;  // SRL
+                                alu_op = 4'b0110;
                             end else if (funct7 == 7'b0100000) begin
                                 decoded_instruction = "SRA";
-                                alu_op = 4'b1011;  // SRA
+                                alu_op = 4'b0111;
+                            end else if (funct7 == 7'b0000001) begin
+                                decoded_instruction = "DIVU";
+                                alu_op = 4'b1100; // Reuse DIV path for unsigned division
+                            end
+                        end
+                        3'b110: begin // OR, REM
+                            if (funct7 == 7'b0000000) begin
+                                decoded_instruction = "OR";
+                                alu_op = 4'b0011;
+                            end else if (funct7 == 7'b0000001) begin
+                                decoded_instruction = "REM";
+                                alu_op = 4'b1101;
+                            end
+                        end
+                        3'b111: begin // AND, REMU
+                            if (funct7 == 7'b0000000) begin
+                                decoded_instruction = "AND";
+                                alu_op = 4'b0010;
+                            end else if (funct7 == 7'b0000001) begin
+                                decoded_instruction = "REMU";
+                                alu_op = 4'b1101; // Reuse REM path for unsigned
                             end
                         end
                     endcase
                     $display("R-type %x :%h %s x%d, x%d, x%d", address, input_bin, decoded_instruction, rd, rs1, rs2);
+                end
+                7'b0111011: begin // R-type 32-bit (e.g., ADDW, SUBW, etc.)
+                    imm_signed      = 0;
+                    imm_unsigned    = 0;
+
+                    case (funct3)
+                        3'b000: begin // ADDW, SUBW, MULW
+                            if (funct7 == 7'b0000000) begin
+                                decoded_instruction = "ADDW";
+                                alu_op = 4'b0000;
+                            end else if (funct7 == 7'b0100000) begin
+                                decoded_instruction = "SUBW";
+                                alu_op = 4'b0001;
+                            end else if (funct7 == 7'b0000001) begin
+                                decoded_instruction = "MULW";
+                                alu_op = 4'b1010;
+                            end
+                        end
+                        3'b001: begin // SLLW
+                            if (funct7 == 7'b0000000) begin
+                                decoded_instruction = "SLLW";
+                                alu_op = 4'b0101;
+                            end
+                        end
+                        3'b100: begin // DIVW
+                            if (funct7 == 7'b0000001) begin
+                                decoded_instruction = "DIVW";
+                                alu_op = 4'b1100;
+                            end
+                        end
+                        3'b101: begin // SRLW, SRAW, DIVUW
+                            if (funct7 == 7'b0000000) begin
+                                decoded_instruction = "SRLW";
+                                alu_op = 4'b0110;
+                            end else if (funct7 == 7'b0100000) begin
+                                decoded_instruction = "SRAW";
+                                alu_op = 4'b0111;
+                            end else if (funct7 == 7'b0000001) begin
+                                decoded_instruction = "DIVUW";
+                                alu_op = 4'b1100;
+                            end
+                        end
+                        3'b110: begin // REMW
+                            if (funct7 == 7'b0000001) begin
+                                decoded_instruction = "REMW";
+                                alu_op = 4'b1101;
+                            end
+                        end
+                        3'b111: begin // REMUW
+                            if (funct7 == 7'b0000001) begin
+                                decoded_instruction = "REMUW";
+                                alu_op = 4'b1101;
+                            end
+                        end
+                    endcase
+                    $display("R64-type %x :%h %s x%d, x%d, x%d", address, input_bin, decoded_instruction, rd, rs1, rs2);
                 end
 
                 /* I-type Datapath
@@ -134,9 +234,17 @@ module Decoder (
                     //imm = imm_signed;
                     funct7 = 0;
                     case (funct3)
-                        3'b000: begin
+                        3'b000: begin //rd = rs1 + imm
                             decoded_instruction = "ADDI";  // ADDI
                             alu_op = 4'b0000;  // ALU operation for ADDI
+                        end
+                        3'b010: begin // SLTI
+                            decoded_instruction = "SLTI";
+                            alu_op = 4'b1000; // Set Less Than (signed)
+                        end
+                        3'b011: begin // SLTIU
+                            decoded_instruction = "SLTIU";
+                            alu_op = 4'b1001; // Set Less Than (unsigned)
                         end
                         3'b111: begin
                             decoded_instruction = "ANDI";  // ANDI
@@ -152,16 +260,12 @@ module Decoder (
                         end
                         3'b001: begin
                             decoded_instruction = "SLLI";  // SLLI
-                            alu_op = 4'b0100;  // ALU operation for SLLI
-                        end
-                        3'b011: begin
-                            decoded_instruction = "SLTIU"; // SLTIU
-                            alu_op = 4'b0110;  // ALU operation for SLTIU
+                            alu_op = 4'b0101;  // ALU operation for SLLI
                         end
                         3'b101: begin
                             if (funct7 == 7'b0000000) begin
                                 decoded_instruction = "SRLI";  // SRLI
-                                alu_op = 4'b0101;  // ALU operation for SRLI
+                                alu_op = 4'b0110;  // ALU operation for SRLI
                             end else if (funct7 == 7'b0100000) begin
                                 decoded_instruction = "SRAI";  // SRAI
                                 alu_op = 4'b0111;  // ALU operation for SRAI
@@ -180,16 +284,16 @@ module Decoder (
                     case (funct3)
                         3'b000: begin
                             decoded_instruction = "ADDIW";  // ADDIW
-                            alu_op = 4'b0010;  // ALU operation for ADDIW
+                            alu_op = 4'b0000;  // ALU operation for ADDIW
                         end
                         3'b001: begin
                             decoded_instruction = "SLLIW";  // SLLIW
-                            alu_op = 4'b0100;  // ALU operation for SLLIW
+                            alu_op = 4'b0101;  // ALU operation for SLLIW
                         end
                         3'b101: begin
                             if (funct7 == 7'b0000000) begin
                                 decoded_instruction = "SRLIW";  // SRLIW
-                                alu_op = 4'b0101;  // ALU operation for SRLIW
+                                alu_op = 4'b0110;  // ALU operation for SRLIW
                             end else if (funct7 == 7'b0100000) begin
                                 decoded_instruction = "SRAIW";  // SRAIW
                                 alu_op = 4'b0111;  // ALU operation for SRAIW
@@ -231,7 +335,7 @@ module Decoder (
                     //imm = imm_signed;
                     funct7 = 0;
                     decoded_instruction = "JALR";  // Jump and link register
-                    alu_op = 4'b0010;              // ALU operation for address calculation (addition)
+                    alu_op = 4'b0000;              // ALU operation for address calculation (addition)
                     $display("I-Type %x :%h %s x%d, x%d, %d", address, input_bin, decoded_instruction, rd, rs1, imm_signed);
                 end
 
@@ -269,9 +373,13 @@ module Decoder (
                     //imm = imm_signed;
                     funct7 = 0;
                     case (funct3)
-                        3'b011: decoded_instruction = "LD";  // Load doubleword (64-bit load)
-                        3'b010: decoded_instruction = "LW";  // Load word
-                        3'b100: decoded_instruction = "LBU"; // LBU
+                        3'b000: decoded_instruction = "LB";   // Load byte
+                        3'b001: decoded_instruction = "LH";   // Load halfword
+                        3'b010: decoded_instruction = "LW";   // Load word
+                        3'b011: decoded_instruction = "LD";   // Load doubleword (64-bit)
+                        3'b100: decoded_instruction = "LBU";  // Load byte unsigned
+                        3'b101: decoded_instruction = "LHU";  // Load halfword unsigned
+                        3'b110: decoded_instruction = "LWU";  // Load word unsigned
                     endcase
                     $display("I-Type %x :%h %s x%d, %d(x%d)", address, input_bin, decoded_instruction, rd, imm_signed, rs1);
                 end
@@ -416,9 +524,9 @@ module Decoder (
                     funct3 = 0;
                     decoded_instruction = "LUI";  // Load upper immediate
                     alu_op = 4'b0000;             // ALU pass-through or immediate load (depends on implementation)
-                    $display("%x :%h %s x%d, %d", address, input_bin, decoded_instruction, rd, imm_signed);
+                    $display("U-type: %x :%h %s x%d, %d", address, input_bin, decoded_instruction, rd, imm_signed);
                 end
-                7'b0010111: begin
+                7'b0010111: begin /// rd = pc + (imm << 12)
                     rs1 = 0;
                     rs2 = 0;
                     imm_signed = {input_bin[31:12], 12'b0}; 
@@ -426,7 +534,7 @@ module Decoder (
                     funct7 = 0;
                     funct3 = 0;
                     decoded_instruction = "AUIPC";  // Add upper immediate to PC
-                    alu_op = 4'b0010; 
+                    alu_op = 4'b0000; 
                     $display("U-Type %x :%h %s x%d, %d", address, input_bin, decoded_instruction, rd, imm_signed);
                 end
 
@@ -454,6 +562,7 @@ module Decoder (
                     Output: register_file[MEM_WB_rd] (return address)
                 */
                 // J-Type Instructions (opcode: 1101111)
+                //Since JAL computes result = PC + 4, Set ex_operand1_in = PC, Set ex_operand2_in = 64'd4
                 7'b1101111: begin
                     rs1 = 0;
                     rs2 = 0;
@@ -462,7 +571,7 @@ module Decoder (
                     funct7 = 0;
                     funct3 = 0;
                     decoded_instruction = "JAL";  // Jump and link
-                    alu_op = 4'b1110; 
+                    alu_op = 4'b0000; 
                     $display("J-Type %x :%h %s x%d, %d", address, input_bin, decoded_instruction, rd, imm_signed);
                 end
             endcase
