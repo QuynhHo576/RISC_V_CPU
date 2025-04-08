@@ -18,7 +18,8 @@ module Fetch (
     input  logic                  m_axi_rlast,
 
     // Outputs to Decode stage
-    output logic [31:0] if_instr
+    output logic [31:0] if_instr,
+    output logic [31:0] if_address_out
     
 );
 
@@ -128,5 +129,6 @@ module Fetch (
         end
     end
 
-assign if_instr         = instruction_array[pc_fetch[9:2]];
+assign if_instr              = instruction_array[pc_fetch[9:2]];
+assign if_address_out        = pc_fetch;
 endmodule

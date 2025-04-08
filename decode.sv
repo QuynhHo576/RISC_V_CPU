@@ -136,19 +136,19 @@ module Decoder (
                     case (funct3)
                         3'b000: begin
                             decoded_instruction = "ADDI";  // ADDI
-                            alu_op = 4'b0010;  // ALU operation for ADDI
+                            alu_op = 4'b0000;  // ALU operation for ADDI
                         end
                         3'b111: begin
                             decoded_instruction = "ANDI";  // ANDI
-                            alu_op = 4'b0000;  // ALU operation for ANDI
+                            alu_op = 4'b0010;  // ALU operation for ANDI
                         end
                         3'b110: begin
                             decoded_instruction = "ORI";   // ORI
-                            alu_op = 4'b0001;  // ALU operation for ORI
+                            alu_op = 4'b0011;  // ALU operation for ORI
                         end
                         3'b100: begin
                             decoded_instruction = "XORI";  // XORI
-                            alu_op = 4'b0011;  // ALU operation for XORI
+                            alu_op = 4'b0100;  // ALU operation for XORI
                         end
                         3'b001: begin
                             decoded_instruction = "SLLI";  // SLLI

@@ -14,7 +14,13 @@ module ALU (
             4'b0100: result = ex_operand1_in ^ ex_operand2_in;  // XOR
             4'b0101: result = ex_operand1_in << ex_operand2_in[5:0]; // SLL
             4'b0110: result = ex_operand1_in >> ex_operand2_in[5:0]; // SRL
-            4'b0111: result = $signed(ex_operand1_in) >>> ex_operand2_in[5:0]; // SRA
+            4'b0111: result = $signed(ex_operand1_in) >>> ex_operand2_in[5:0]; // SRAI
+            4'b1000: result = (ex_operand1_in < ex_operand2_in) ? 64'b1 : 64'b0;  // SLT Set Less Than (signed)
+            4'b1001: result = (ex_operand1_in < ex_operand1_in) ? 64'b1 : 64'b0;  // Set Less Than Unsigned
+            4'b1010: result = ex_operand1_in * ex_operand2_in;      // Multiplication
+            4'b1011: result = (ex_operand1_in * ex_operand2_in) >> 64; // Multiply High (64-bit result)
+            4'b1100: result = ex_operand1_in / ex_operand2_in;      // Division
+            4'b1101: result = ex_operand1_in % ex_operand2_in;      // Remainder
         endcase
     end
     assign ex_alu_result_out = result;

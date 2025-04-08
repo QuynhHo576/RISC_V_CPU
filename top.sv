@@ -85,7 +85,7 @@ module top
 
 //============FETCH (FETCH STAGE)============================
 logic [31:0] if_instr;
-//logic [63:0] if_address; 
+logic [63:0] if_address_out; 
 
 Fetch fetch_inst (
         .clk            (clk),
@@ -106,8 +106,8 @@ Fetch fetch_inst (
         .m_axi_rready   (m_axi_rready),
         .m_axi_rlast    (m_axi_rlast),
 
-        .if_instr       (if_instr)
-        //.if_address     (if_address)
+        .if_instr       (if_instr),
+        .if_address_out (if_address_out)
     );
 
 // //=============IF_ID_REG====================
@@ -140,7 +140,7 @@ logic [3:0]             id_alu_op_out;
 
 Decoder Decoder(
         .input_bin(if_instr),
-        //.address(if_if_address_out)
+        .address(if_address_out),
 
         .id_reg_rs1_out(id_reg_rs1_out), 
         .id_reg_rs2_out(id_reg_rs2_out), 
@@ -154,7 +154,7 @@ Decoder Decoder(
         .id_alu_op_out(id_alu_op_out)
 );
 
-//===============CONTROL LOGIC (DECODE STAGE)=======================
+//===============CONTROL LOGIC=======================
 logic reg_write_control;          // control signal to write to register
 logic mem_read_control;           // control signal for memory read
 logic mem_write_control;          // control signal for memory write
@@ -168,10 +168,10 @@ ControlUnit ControlUnit(
         //.mem_read_control(mem_read_control),
         //.mem_write_control(mem_write_control),
         .alu_src_control(alu_src_control),
-        .mem_to_reg_control(mem_to_reg_control)
+        //.mem_to_reg_control(mem_to_reg_control)
 );
 
-//===============REG_FILE============================
+//===============REG_FILE  (DECODE STAGE)============================
 logic [63:0] regA_data_out;
 logic [63:0] regB_data_out;
 
@@ -181,8 +181,8 @@ RegisterFile RegisterFile(
         .regA_addr_in(id_reg_rs1_out),
         .regB_addr_in(id_reg_rs2_out),
         .rd_addr_in(id_reg_rd_out), //reg destination
-        //.reg_write_data_in, //output from ALU
-        //.reg_write_enable, //enable from control logic
+        .reg_write_data_in(ex_alu_result_out), //output from ALU
+        .reg_write_enable(reg_write_control), //enable from control logic
 
         .regA_data_out(regA_data_out),
         .regB_data_out(regB_data_out)
@@ -192,13 +192,15 @@ RegisterFile RegisterFile(
 logic [63:0]    ex_alu_result_out;
 logic [63:0]    ex_operand_2_in;
 
+//QUESTION???: how to deal with unsigned in this case?
+//From DECODE, we can output both signed and unsigned imm
 assign ex_operand_2_in = alu_src_control ? id_reg_imm_signed_out : regB_data_out;
 
 ALU     ALU(
         .ex_operand1_in(regA_data_out),
         .ex_operand2_in(ex_operand_2_in),
         .ex_alu_op_in(id_alu_op_out),
-        .ex_alu_result_out(ex_alu_result)
+        .ex_alu_result_out(ex_alu_result_out)
 );
 
 // Initialization
