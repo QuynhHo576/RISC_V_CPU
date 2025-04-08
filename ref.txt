@@ -336,6 +336,8 @@ For 12-bit immediate: ADDI rd, x0, imm
 
 For larger immediate values: A combination of LUI and ADDI (for 20-bit and 32-bit immediate values)
 
+///////////////////////////////
+SIGNED VALUE
 
 imm_signed = {
     {19{input_bin[31]}},  // Sign extension for 32-bit signed number (imm[12])
@@ -354,3 +356,7 @@ Copy
 Edit
 19{input_bin[31]}  → 19'b1111111111111111111
 You're doing sign extension of the most significant bit (bit 31) to ensure imm_signed becomes a signed 32-bit value.
+
+/////////////////////
+
+https://lists.riscv.org/g/tech-unprivileged/attachment/535/0/unpriv-isa-asciidoc.pdf page 194 -> instruction format

@@ -30,14 +30,14 @@ module control_unit (
                 alu_src = 1;  // Immediate operand used
                 mem_to_reg = 0;      // No need to write data to register (since it's a store operation)
             end
-            7'b1100111: begin // JALR (Jump and Link Register)
+            7'b1100111: begin // I-type JALR (Jump and Link Register)
                 reg_write = 1;      // We need to write the return address (PC + 4) to the register
                 mem_read = 0;       // No memory read for JALR
                 mem_write = 0;      // No memory write for JALR
                 alu_src = 1;        // Immediate operand is used (imm is added to rs1)
                 mem_to_reg = 0;      // No need to write data to register (since it's a store operation)
             end
-            7'b0000011: begin  // Load instructions (e.g., LB, LH, LW, LD)
+            7'b0000011: begin  // I-type Load instructions (e.g., LB, LH, LW, LD)
                 reg_write = 1;       // Enable register write (write data to the register file)
                 mem_read = 1;        // Enable memory read (data will be read from memory)
                 mem_write = 0;       // Disable memory write (no write to memory for load instructions)
@@ -51,8 +51,14 @@ module control_unit (
                 alu_src = 1;         // Immediate operand is used for ALU operation (calculating address)
                 mem_to_reg = 0;      // No need to write data to register (since it's a store operation)
             end
-
-            7'b0110111: begin // LUI - Load Upper Immediate
+            7'b1100011: begin // B-Type branch instructions
+                reg_write  = 0;       // No register write
+                mem_read   = 0;       // No memory read
+                mem_write  = 0;       // No memory write
+                alu_src    = 0;       // ALU input is from registers (rs1 and rs2)
+                // alu_op will be set based on funct3 (e.g., BEQ, BNE, etc.)
+            end
+            7'b0110111: begin // U-type LUI - Load Upper Immediate
                 reg_write  = 1;
                 mem_read   = 0;
                 mem_write  = 0;
@@ -60,7 +66,7 @@ module control_unit (
                 mem_to_reg = 0;  // ALU result to register
             end
 
-            7'b0010111: begin // AUIPC - Add Upper Immediate to PC
+            7'b0010111: begin // U-type AUIPC - Add Upper Immediate to PC
                 reg_write  = 1;
                 mem_read   = 0;
                 mem_write  = 0;
@@ -68,7 +74,7 @@ module control_unit (
                 mem_to_reg = 0;  // ALU result to register
             end
 
-            7'b1101111: begin // JAL - Jump and Link
+            7'b1101111: begin // J-type JAL - Jump and Link
                 reg_write  = 1;       // Write return address (PC+4) to rd
                 mem_read   = 0;
                 mem_write  = 0;

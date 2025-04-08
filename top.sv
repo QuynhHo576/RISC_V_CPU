@@ -149,14 +149,13 @@ Decoder Decoder(
         .input_bin(if_instr),
         //.address(if_if_address_out)
 
-        // .rs1, 
-        // .rs2, 
-        // .rd,
-        // .imm_signed,
-        // .imm_unsigned,
-        // .opcode
-        // .funct7,
-        // .funct3
+        .rs1, 
+        .rs2, 
+        .rd,
+        .imm,
+        .opcode,
+        .funct7,
+        .funct3
 );
 
 //===============
