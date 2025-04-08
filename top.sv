@@ -2,6 +2,7 @@
 `include "fetch.sv"
 //`include "pipeline_reg.sv"
 `include "decode.sv"
+`include "reg_file.sv"
 
 module top
 #(
@@ -145,21 +146,41 @@ Fetch fetch_inst (
 //         .if_id_instruction_out(if_id_instr_out)
 // );
 //===============DECODE====================
+logic [4:0]    id_reg_rs1_out, id_reg_rs2_out, id_reg_rd_out;
+logic [31:0]   id_reg_imm_out;
+logic [6:0]    id_reg_opcode_out, id_reg_funct7_out;
+logic [2:0]    id_reg_funct3_out;
+logic [3:0]    id_alu_op_out;
+
 Decoder Decoder(
         .input_bin(if_instr),
         //.address(if_if_address_out)
 
-        .rs1, 
-        .rs2, 
-        .rd,
-        .imm,
-        .opcode,
-        .funct7,
-        .funct3
+        .id_reg_rs1_out(id_reg_rs1_out), 
+        .id_reg_rs2_out(id_reg_rs2_out), 
+        .id_reg_rd_out(id_reg_rd_out),
+        .id_reg_imm_out(id_reg_imm_out),
+        .id_reg_opcode_out(id_reg_opcode_out),
+        .id_reg_funct7_out(id_reg_funct7_out),
+        .id_reg_funct3_out(id_reg_funct7_out),
+        .id_alu_op_out(id_alu_op_out)
 );
+//===============REG_FILE=======================
+logic [63:0] regA_data;
+logic [63:0] regB_data;
 
-//===============
+RegisterFile RegisterFile(
+        .clk(clk),
+        .reset(reset),
+        .regA_addr(id_reg_rs1_out),
+        .regB_addr(id_reg_rs2_out),
+        .rd_addr(id_reg_rd_out), //reg destination
+        //.write_data, //output from ALU
+        //.reg_write_enable, //enable from control logic
 
+        .regA_data(regA_data),
+        .regB_data(regB_data)
+);
 //Combinational logic to handle read transaction of current state
 // always_comb begin
 //    if (!reset) begin

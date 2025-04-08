@@ -74,7 +74,7 @@ void Vtop::_initial__TOP__1(Vtop__Syms* __restrict vlSymsp) {
     VL_DEBUG_IF(VL_PRINTF("    Vtop::_initial__TOP__1\n"); );
     Vtop* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
-    // INITIAL at top.sv:394
+    // INITIAL at top.sv:414
     VL_WRITEF("Initializing top, entry point = 0x%x\n",
 	      64,vlTOPp->entry);
 }
@@ -87,30 +87,41 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
     VL_SIG8(__Vdly__m_axi_rready,0,0);
     VL_SIG8(__Vdlyvset__top__DOT__fetch_inst__DOT__instruction_array__v0,0,0);
     VL_SIG8(__Vdlyvset__top__DOT__fetch_inst__DOT__instruction_array__v1,0,0);
+    VL_SIG8(__Vdlyvset__top__DOT__RegisterFile__DOT__registers__v0,0,0);
+    VL_SIG8(__Vdlyvdim0__top__DOT__RegisterFile__DOT__registers__v32,4,0);
+    VL_SIG8(__Vdlyvset__top__DOT__RegisterFile__DOT__registers__v32,0,0);
+    //char	__VpadToAlign31[1];
     VL_SIG16(__Vdly__top__DOT__fetch_inst__DOT__index,9,0);
     VL_SIG16(__Vdlyvdim0__top__DOT__fetch_inst__DOT__instruction_array__v0,9,0);
     VL_SIG16(__Vdlyvdim0__top__DOT__fetch_inst__DOT__instruction_array__v1,9,0);
     VL_SIG16(__Vdly__top__DOT__fetch_inst__DOT__pc_fetch,9,0);
     VL_SIG(__Vdlyvval__top__DOT__fetch_inst__DOT__instruction_array__v0,31,0);
     VL_SIG(__Vdlyvval__top__DOT__fetch_inst__DOT__instruction_array__v1,31,0);
-    //char	__VpadToAlign44[4];
     VL_SIG64(__Vdly__top__DOT__fetch_inst__DOT__next_display_addr,63,0);
+    VL_SIG64(__Vdlyvval__top__DOT__RegisterFile__DOT__registers__v32,63,0);
     // Body
-    __Vdly__top__DOT__fetch_inst__DOT__pc_fetch = vlTOPp->top__DOT__fetch_inst__DOT__pc_fetch;
+    __Vdlyvset__top__DOT__RegisterFile__DOT__registers__v0 = 0U;
+    __Vdlyvset__top__DOT__RegisterFile__DOT__registers__v32 = 0U;
     __Vdly__top__DOT__fetch_inst__DOT__next_display_addr 
 	= vlTOPp->top__DOT__fetch_inst__DOT__next_display_addr;
     __Vdly__m_axi_arvalid = vlTOPp->m_axi_arvalid;
     __Vdly__m_axi_rready = vlTOPp->m_axi_rready;
+    __Vdly__top__DOT__fetch_inst__DOT__pc_fetch = vlTOPp->top__DOT__fetch_inst__DOT__pc_fetch;
     __Vdly__top__DOT__fetch_inst__DOT__index = vlTOPp->top__DOT__fetch_inst__DOT__index;
     __Vdlyvset__top__DOT__fetch_inst__DOT__instruction_array__v0 = 0U;
     __Vdlyvset__top__DOT__fetch_inst__DOT__instruction_array__v1 = 0U;
-    // ALWAYS at fetch.sv:123
+    // ALWAYS at reg_file.sv:20
     if (vlTOPp->reset) {
-	__Vdly__top__DOT__fetch_inst__DOT__pc_fetch = 0U;
+	vlTOPp->top__DOT__RegisterFile__DOT__i = 0x20U;
+	__Vdlyvset__top__DOT__RegisterFile__DOT__registers__v0 = 1U;
     } else {
-	if (vlTOPp->m_axi_rlast) {
-	    __Vdly__top__DOT__fetch_inst__DOT__pc_fetch 
-		= (0x3ffU & ((IData)(4U) + (IData)(vlTOPp->top__DOT__fetch_inst__DOT__pc_fetch)));
+	if (((IData)(vlTOPp->top__DOT__RegisterFile__DOT__reg_write_enable) 
+	     & (0U != (IData)(vlTOPp->top__DOT__Decoder__DOT__rd)))) {
+	    __Vdlyvval__top__DOT__RegisterFile__DOT__registers__v32 
+		= vlTOPp->top__DOT__RegisterFile__DOT__write_data;
+	    __Vdlyvset__top__DOT__RegisterFile__DOT__registers__v32 = 1U;
+	    __Vdlyvdim0__top__DOT__RegisterFile__DOT__registers__v32 
+		= vlTOPp->top__DOT__Decoder__DOT__rd;
 	}
     }
     // ALWAYS at fetch.sv:73
@@ -133,6 +144,15 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 		= (VL_ULL(8) + vlTOPp->top__DOT__fetch_inst__DOT__display_addr);
 	    vlTOPp->top__DOT__fetch_inst__DOT__fetched_instr 
 		= vlTOPp->m_axi_rdata;
+	}
+    }
+    // ALWAYS at fetch.sv:123
+    if (vlTOPp->reset) {
+	__Vdly__top__DOT__fetch_inst__DOT__pc_fetch = 0U;
+    } else {
+	if (vlTOPp->m_axi_rlast) {
+	    __Vdly__top__DOT__fetch_inst__DOT__pc_fetch 
+		= (0x3ffU & ((IData)(4U) + (IData)(vlTOPp->top__DOT__fetch_inst__DOT__pc_fetch)));
 	}
     }
     // ALWAYS at fetch.sv:113
@@ -163,8 +183,47 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp) {
 		= (0x3ffU & ((IData)(2U) + (IData)(vlTOPp->top__DOT__fetch_inst__DOT__index)));
 	}
     }
-    vlTOPp->top__DOT__fetch_inst__DOT__pc_fetch = __Vdly__top__DOT__fetch_inst__DOT__pc_fetch;
+    // ALWAYSPOST at reg_file.sv:23
+    if (__Vdlyvset__top__DOT__RegisterFile__DOT__registers__v0) {
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0U] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[1U] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[2U] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[3U] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[4U] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[5U] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[6U] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[7U] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[8U] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[9U] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0xaU] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0xbU] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0xcU] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0xdU] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0xeU] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0xfU] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0x10U] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0x11U] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0x12U] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0x13U] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0x14U] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0x15U] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0x16U] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0x17U] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0x18U] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0x19U] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0x1aU] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0x1bU] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0x1cU] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0x1dU] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0x1eU] = VL_ULL(0);
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[0x1fU] = VL_ULL(0);
+    }
+    if (__Vdlyvset__top__DOT__RegisterFile__DOT__registers__v32) {
+	vlTOPp->top__DOT__RegisterFile__DOT__registers[__Vdlyvdim0__top__DOT__RegisterFile__DOT__registers__v32] 
+	    = __Vdlyvval__top__DOT__RegisterFile__DOT__registers__v32;
+    }
     vlTOPp->m_axi_arvalid = __Vdly__m_axi_arvalid;
+    vlTOPp->top__DOT__fetch_inst__DOT__pc_fetch = __Vdly__top__DOT__fetch_inst__DOT__pc_fetch;
     vlTOPp->top__DOT__fetch_inst__DOT__index = __Vdly__top__DOT__fetch_inst__DOT__index;
     vlTOPp->m_axi_rready = __Vdly__m_axi_rready;
     // ALWAYSPOST at fetch.sv:117
@@ -1178,6 +1237,22 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__5(Vtop__Syms* __restrict vlSymsp) {
 	    }
 	}
     }
+    vlTOPp->top__DOT__regA_data = vlTOPp->top__DOT__RegisterFile__DOT__registers
+	[vlTOPp->top__DOT__Decoder__DOT__rs1];
+    vlTOPp->top__DOT__regB_data = vlTOPp->top__DOT__RegisterFile__DOT__registers
+	[vlTOPp->top__DOT__Decoder__DOT__rs2];
+    vlTOPp->top__DOT__id_reg_funct7_out = vlTOPp->top__DOT__Decoder__DOT__funct7;
+}
+
+void Vtop::_settle__TOP__6(Vtop__Syms* __restrict vlSymsp) {
+    VL_DEBUG_IF(VL_PRINTF("    Vtop::_settle__TOP__6\n"); );
+    Vtop* __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
+    // Body
+    vlTOPp->top__DOT__regA_data = vlTOPp->top__DOT__RegisterFile__DOT__registers
+	[vlTOPp->top__DOT__Decoder__DOT__rs1];
+    vlTOPp->top__DOT__regB_data = vlTOPp->top__DOT__RegisterFile__DOT__registers
+	[vlTOPp->top__DOT__Decoder__DOT__rs2];
+    vlTOPp->top__DOT__id_reg_funct7_out = vlTOPp->top__DOT__Decoder__DOT__funct7;
 }
 
 void Vtop::_eval(Vtop__Syms* __restrict vlSymsp) {
@@ -1218,6 +1293,7 @@ void Vtop::_eval_settle(Vtop__Syms* __restrict vlSymsp) {
     // Body
     vlTOPp->_settle__TOP__3(vlSymsp);
     vlTOPp->__Vm_traceActivity = (1U | vlTOPp->__Vm_traceActivity);
+    vlTOPp->_settle__TOP__6(vlSymsp);
 }
 
 VL_INLINE_OPT QData Vtop::_change_request(Vtop__Syms* __restrict vlSymsp) {
@@ -1286,6 +1362,10 @@ void Vtop::_ctor_var_reset() {
     top__DOT__display_addr = VL_RAND_RESET_Q(64);
     top__DOT__next_display_addr = VL_RAND_RESET_Q(64);
     top__DOT__if_instr = VL_RAND_RESET_I(32);
+    top__DOT__id_reg_funct7_out = VL_RAND_RESET_I(7);
+    top__DOT__id_reg_funct3_out = VL_RAND_RESET_I(3);
+    top__DOT__regA_data = VL_RAND_RESET_Q(64);
+    top__DOT__regB_data = VL_RAND_RESET_Q(64);
     top__DOT__fetch_inst__DOT__state = VL_RAND_RESET_I(3);
     top__DOT__fetch_inst__DOT__next_state = VL_RAND_RESET_I(3);
     top__DOT__fetch_inst__DOT__pc = VL_RAND_RESET_Q(64);
@@ -1312,6 +1392,12 @@ void Vtop::_ctor_var_reset() {
     top__DOT__Decoder__DOT__imm_unsigned = VL_RAND_RESET_I(32);
     top__DOT__Decoder__DOT__decoded_instruction = VL_RAND_RESET_Q(64);
     top__DOT__Decoder__DOT__alu_op = VL_RAND_RESET_I(4);
+    top__DOT__RegisterFile__DOT__write_data = VL_RAND_RESET_Q(64);
+    top__DOT__RegisterFile__DOT__reg_write_enable = VL_RAND_RESET_I(1);
+    { int __Vi0=0; for (; __Vi0<32; ++__Vi0) {
+	    top__DOT__RegisterFile__DOT__registers[__Vi0] = VL_RAND_RESET_Q(64);
+    }}
+    top__DOT__RegisterFile__DOT__i = VL_RAND_RESET_I(32);
     __Vclklast__TOP__clk = VL_RAND_RESET_I(1);
     __Vm_traceActivity = VL_RAND_RESET_I(32);
 }
