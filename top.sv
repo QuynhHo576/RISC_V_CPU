@@ -4,6 +4,7 @@
 `include "decode.sv"
 `include "reg_file.sv"
 `include "control_logic.sv"
+`include "alu.sv"
 
 module top
 #(
@@ -82,7 +83,7 @@ module top
 //ALU: op1 op2, tin hieu chon phep toan, function add, and, xor, shift
 //load and store
 
-//============FETCH============================
+//============FETCH (FETCH STAGE)============================
 logic [31:0] if_instr;
 //logic [63:0] if_address; 
 
@@ -129,10 +130,10 @@ Fetch fetch_inst (
 * PATH 1: DECODE 
 * PATH 2: CONTROL LOGIC
 */
-//===============DECODE====================
+//===============DECODE (DECODE STAGE)====================
 logic [4:0]             id_reg_rs1_out, id_reg_rs2_out, id_reg_rd_out;
-logic [31:0]            id_reg_imm_signed;
-logic [31:0]            id_reg_imm_unsigned;
+logic [31:0]            id_reg_imm_signed_out;
+logic [31:0]            id_reg_imm_unsigned_out;
 logic [6:0]             id_reg_opcode_out, id_reg_funct7_out;
 logic [2:0]             id_reg_funct3_out;
 logic [3:0]             id_alu_op_out;
@@ -145,15 +146,15 @@ Decoder Decoder(
         .id_reg_rs2_out(id_reg_rs2_out), 
         .id_reg_rd_out(id_reg_rd_out),
         //.id_reg_imm_out(id_reg_imm_out),
-        .id_reg_imm_signed(id_reg_imm_signed),
-        .id_reg_imm_unsigned(id_reg_imm_unsigned),
+        .id_reg_imm_signed_out(id_reg_imm_signed_out),
+        .id_reg_imm_unsigned_out(id_reg_imm_unsigned_out),
         .id_reg_opcode_out(id_reg_opcode_out),
         .id_reg_funct7_out(id_reg_funct7_out),
         .id_reg_funct3_out(id_reg_funct7_out),
         .id_alu_op_out(id_alu_op_out)
 );
 
-//===============CONTROL LOGIC=======================
+//===============CONTROL LOGIC (DECODE STAGE)=======================
 logic reg_write_control;          // control signal to write to register
 logic mem_read_control;           // control signal for memory read
 logic mem_write_control;          // control signal for memory write
@@ -171,20 +172,33 @@ ControlUnit ControlUnit(
 );
 
 //===============REG_FILE============================
-logic [63:0] regA_data;
-logic [63:0] regB_data;
+logic [63:0] regA_data_out;
+logic [63:0] regB_data_out;
 
 RegisterFile RegisterFile(
         .clk(clk),
         .reset(reset),
-        .regA_addr(id_reg_rs1_out),
-        .regB_addr(id_reg_rs2_out),
-        .rd_addr(id_reg_rd_out), //reg destination
-        //.write_data, //output from ALU
+        .regA_addr_in(id_reg_rs1_out),
+        .regB_addr_in(id_reg_rs2_out),
+        .rd_addr_in(id_reg_rd_out), //reg destination
+        //.reg_write_data_in, //output from ALU
         //.reg_write_enable, //enable from control logic
 
-        .regA_data(regA_data),
-        .regB_data(regB_data)
+        .regA_data_out(regA_data_out),
+        .regB_data_out(regB_data_out)
+);
+
+//===============ALU (EXECUTE STAGE)============================
+logic [63:0]    ex_alu_result_out;
+logic [63:0]    ex_operand_2_in;
+
+assign ex_operand_2_in = alu_src_control ? id_reg_imm_signed_out : regB_data_out;
+
+ALU     ALU(
+        .ex_operand1_in(regA_data_out),
+        .ex_operand2_in(ex_operand_2_in),
+        .ex_alu_op_in(id_alu_op_out),
+        .ex_alu_result_out(ex_alu_result)
 );
 
 // Initialization

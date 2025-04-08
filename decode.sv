@@ -4,8 +4,8 @@ module Decoder (
 
     output logic [4:0] id_reg_rs1_out, id_reg_rs2_out, id_reg_rd_out,
     //output logic [31:0]id_reg_imm_out,
-    output logic signed [31:0]id_reg_imm_signed,
-    output logic unsigned [31:0] id_reg_imm_unsigned,
+    output logic signed [31:0]id_reg_imm_signed_out,
+    output logic unsigned [31:0] id_reg_imm_unsigned_out,
     output logic [6:0]  id_reg_opcode_out, id_reg_funct7_out,
     output logic [2:0]  id_reg_funct3_out,
     output logic [3:0]  id_alu_op_out
@@ -472,8 +472,8 @@ module Decoder (
     assign id_reg_rs2_out = rs2;
     assign id_reg_rd_out = rd;
     //assign id_reg_imm_out = imm;
-    assign id_reg_imm_signed = imm_signed;
-    assign id_reg_imm_unsigned = imm_unsigned;
+    assign id_reg_imm_signed_out = imm_signed;
+    assign id_reg_imm_unsigned_out = imm_unsigned;
     assign id_reg_opcode_out = opcode;
     assign id_reg_funct7_out = funct7;
     assign id_reg_funct3_out = funct3;

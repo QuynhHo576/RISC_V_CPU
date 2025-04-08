@@ -108,22 +108,25 @@ VL_MODULE(Vtop) {
     VL_SIG(top__DOT__Decoder__DOT__imm_unsigned,31,0);
     VL_SIG(top__DOT__RegisterFile__DOT__i,31,0);
     //char	__VpadToAlign164[4];
-    VL_SIG64(top__DOT__regA_data,63,0);
-    VL_SIG64(top__DOT__regB_data,63,0);
+    VL_SIG64(top__DOT__regA_data_out,63,0);
+    VL_SIG64(top__DOT__regB_data_out,63,0);
+    VL_SIG64(top__DOT__ex_alu_result_out,63,0);
+    VL_SIG64(top__DOT__ex_operand_2_in,63,0);
     VL_SIG64(top__DOT__fetch_inst__DOT__pc,63,0);
     VL_SIG64(top__DOT__fetch_inst__DOT__next_pc,63,0);
     VL_SIG64(top__DOT__fetch_inst__DOT__fetched_instr,63,0);
     VL_SIG64(top__DOT__fetch_inst__DOT__display_addr,63,0);
     VL_SIG64(top__DOT__fetch_inst__DOT__next_display_addr,63,0);
     VL_SIG64(top__DOT__Decoder__DOT__decoded_instruction,63,0);
-    VL_SIG64(top__DOT__RegisterFile__DOT__write_data,63,0);
+    VL_SIG64(top__DOT__RegisterFile__DOT__reg_write_data_in,63,0);
+    VL_SIG64(top__DOT__ALU__DOT__result,63,0);
     VL_SIG(top__DOT__fetch_inst__DOT__instruction_array[1000],31,0);
     VL_SIG64(top__DOT__RegisterFile__DOT__registers[32],63,0);
     
     // LOCAL VARIABLES
     // Internals; generally not touched by application code
     VL_SIG8(__Vclklast__TOP__clk,0,0);
-    //char	__VpadToAlign4501[3];
+    //char	__VpadToAlign4525[3];
     VL_SIG(top__DOT__fetch_inst__DOT____Vlvbound1,31,0);
     VL_SIG(top__DOT__fetch_inst__DOT____Vlvbound2,31,0);
     VL_SIG(__Vm_traceActivity,31,0);
@@ -176,8 +179,10 @@ VL_MODULE(Vtop) {
     static void	_initial__TOP__1(Vtop__Syms* __restrict vlSymsp);
     static void	_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp);
     static void	_sequent__TOP__5(Vtop__Syms* __restrict vlSymsp);
+    static void	_sequent__TOP__7(Vtop__Syms* __restrict vlSymsp);
     static void	_settle__TOP__3(Vtop__Syms* __restrict vlSymsp);
     static void	_settle__TOP__6(Vtop__Syms* __restrict vlSymsp);
+    static void	_settle__TOP__8(Vtop__Syms* __restrict vlSymsp);
     static void	traceChgThis(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
     static void	traceChgThis__2(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
     static void	traceChgThis__3(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
