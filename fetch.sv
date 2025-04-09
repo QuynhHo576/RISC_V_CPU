@@ -115,20 +115,20 @@ module Fetch (
         if (reset) begin
             index <= 0;
         end else if (m_axi_rvalid && m_axi_rready && (index < 1000)) begin
-            instruction_array[index] <= m_axi_rdata[31:0];
-            instruction_array[index + 1] <= m_axi_rdata[63:32];
+            instruction_array[index + 1] <= m_axi_rdata[31:0];
+            instruction_array[index + 2] <= m_axi_rdata[63:32];
             index <= index + 2;
         end
     end
 
     always_ff @(posedge clk) begin
         if (reset) begin
-            pc_fetch <= 0;
-        end else if (m_axi_rlast == 1) begin 
+            pc_fetch <= 0; //point to inst = 0
+        end else if (index == 64) begin //pc_fetch 
             pc_fetch <= pc_fetch + 4;
         end
     end
 
 assign if_instr              = instruction_array[pc_fetch[9:2]];
-assign if_address_out        = pc_fetch;
+assign if_address_out        = pc_fetch - 4;
 endmodule

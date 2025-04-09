@@ -5,7 +5,8 @@ module ControlUnit (
     output logic mem_read_control,           // control signal for memory read
     output logic mem_write_control,          // control signal for memory write
     output logic alu_src_control,            // ALU source control signal - use for when ALU need imm or rs2
-    output logic mem_to_reg_control
+    output logic mem_to_reg_control,
+    output logic pc_contrl
 );
     //logic [4:0]  rs1, rs2, rd;
     logic [6:0]  opcode, funct7;

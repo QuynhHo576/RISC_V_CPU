@@ -132,8 +132,9 @@ Fetch fetch_inst (
 */
 //===============DECODE (DECODE STAGE)====================
 logic [4:0]             id_reg_rs1_out, id_reg_rs2_out, id_reg_rd_out;
-logic [31:0]            id_reg_imm_signed_out;
-logic [31:0]            id_reg_imm_unsigned_out;
+logic [63:0]            id_reg_imm_out;
+logic [63:0]            id_reg_imm_signed_out;
+logic [63:0]            id_reg_imm_unsigned_out;
 logic [6:0]             id_reg_opcode_out, id_reg_funct7_out;
 logic [2:0]             id_reg_funct3_out;
 logic [3:0]             id_alu_op_out;
@@ -145,7 +146,7 @@ Decoder Decoder(
         .id_reg_rs1_out(id_reg_rs1_out), 
         .id_reg_rs2_out(id_reg_rs2_out), 
         .id_reg_rd_out(id_reg_rd_out),
-        //.id_reg_imm_out(id_reg_imm_out),
+        .id_reg_imm_out(id_reg_imm_out),
         .id_reg_imm_signed_out(id_reg_imm_signed_out),
         .id_reg_imm_unsigned_out(id_reg_imm_unsigned_out),
         .id_reg_opcode_out(id_reg_opcode_out),
@@ -192,17 +193,16 @@ RegisterFile RegisterFile(
 logic [63:0]    ex_alu_result_out;
 logic [63:0]    ex_operand_2_in;
 
-//QUESTION???: how to deal with unsigned in this case?
-//From DECODE, we can output both signed and unsigned imm
-assign ex_operand_2_in = alu_src_control ? id_reg_imm_signed_out : regB_data_out;
+assign ex_operand_2_in = alu_src_control ? id_reg_imm_out : regB_data_out; //select imm or rs2 depends on the instruction - Bsel
 
 ALU     ALU(
-        .ex_operand1_in(regA_data_out),
+        .ex_operand1_in(regA_data_out), // R[rs1]
         .ex_operand2_in(ex_operand_2_in),
         .ex_alu_op_in(id_alu_op_out),
         .ex_alu_result_out(ex_alu_result_out)
 );
 
+//===============MEMORY============================
 // Initialization
 initial begin
    $display("Initializing top, entry point = 0x%x", entry);
