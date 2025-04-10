@@ -366,10 +366,16 @@ module Decoder (
                 */
 
                 // Load double word (I-Type for load, opcode: 0000011, funct3: 011 for LD)
+                // Ex: lw x14, 8(x2)
+                // need rs1 (this is an address) -> reg_file -> data of reg[rs1] (data of the reg number rs1) -> ALU_operand1
+                // (ImmSel done here)need imm -> decode out a 12 bit value -> make it 32 bit = new_imm_32bit -> ALU_operand2
+                // (ALUSel done here) func3 tells the alu_op is an add -> ALU outputs an address (= reg[rs1] + new_imm_32)
+                //what if previous inst are arithmetic because we need rs1 as an address -> there will be some reg dedicated to address information
+                // 
                 7'b0000011: begin
                     rs2 = 0;
                     alu_op = 4'b0000;             
-                    imm_signed = {{20{input_bin[31]}}, input_bin[31:20]};
+                    imm_signed = {{20{input_bin[31]}}, input_bin[31:20]}; //done with 12-bit signed imm
                     imm = imm_signed;
                     funct7 = 0;
                     case (funct3)

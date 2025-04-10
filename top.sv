@@ -5,6 +5,7 @@
 `include "reg_file.sv"
 `include "control_logic.sv"
 `include "alu.sv"
+`include "dmem.sv"
 
 module top
 #(
@@ -166,10 +167,10 @@ ControlUnit ControlUnit(
         .if_instr(if_instr),
 
         .reg_write_control(reg_write_control),
-        //.mem_read_control(mem_read_control),
-        //.mem_write_control(mem_write_control),
+        .mem_read_control(mem_read_control),
+        .mem_write_control(mem_write_control),
         .alu_src_control(alu_src_control),
-        //.mem_to_reg_control(mem_to_reg_control)
+        .mem_to_reg_control(mem_to_reg_control)
 );
 
 //===============REG_FILE  (DECODE STAGE)============================
@@ -182,7 +183,7 @@ RegisterFile RegisterFile(
         .regA_addr_in(id_reg_rs1_out),
         .regB_addr_in(id_reg_rs2_out),
         .rd_addr_in(id_reg_rd_out), //reg destination
-        .reg_write_data_in(ex_alu_result_out), //output from ALU
+        .reg_write_data_in(mem_or_alu_result_out), //output from ALU OR data_read of MEM stage OR  => mux can be checked at MEM stage
         .reg_write_enable(reg_write_control), //enable from control logic
 
         .regA_data_out(regA_data_out),
@@ -202,7 +203,28 @@ ALU     ALU(
         .ex_alu_result_out(ex_alu_result_out)
 );
 
-//===============MEMORY============================
+//===============MEMORY (MEMORY STAGE)============================
+logic [63:0] ex_mem_read_data_out;
+
+
+Dmem    D_MEMORY(
+        .clk(clk),
+        .reset(reset),
+        .ex_mem_address(ex_alu_result_out),
+        //.ex_mem_write_data(),
+        .ex_mem_memory_write(mem_write_control), //from control logic
+        .ex_mem_memory_read(mem_read_control), //from control logic
+
+        .ex_mem_read_data_out(ex_mem_read_data_out)
+)
+//at this point, to input back to rd in reg_file, we need to choose either ex_mem_read_data_out or ex_alu_result_out
+logic [63:0] mem_or_alu_result_out;
+assign mem_or_alu_result_out = mem_to_reg_control ? ex_mem_read_data_out : ex_alu_result_out;
+                             //(from control logic)
+
+/////////////////////////////////////////////////////////////////////////
+
+
 // Initialization
 initial begin
    $display("Initializing top, entry point = 0x%x", entry);
