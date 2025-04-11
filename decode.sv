@@ -413,6 +413,7 @@ module Decoder (
                     Not applicable (no data is written back to registers)
                 */
                 // S-Type Instructions (opcode: 0100011) // NO RD
+                // (ImmSel done here)need imm -> decode out a 12 bit value -> make it 32 bit = new_imm_32bit -> ALU_operand2
                 7'b0100011: begin
                     rd = 0;
                     imm_signed = {{20{input_bin[31]}}, input_bin[31:25], input_bin[11:7]};

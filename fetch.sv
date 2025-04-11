@@ -2,6 +2,8 @@ module Fetch (
     input  logic                 clk,
     input  logic                 reset,
     input  logic [63:0]          entry,
+    input logic [63:0]           pc_from_alu_result,
+    input logic                  pcsel,
 
     //Read Address Channel (AR) (Retrieve address data from slave)
     output logic [63:0]           m_axi_araddr,
@@ -125,7 +127,10 @@ module Fetch (
         if (reset) begin
             pc_fetch <= 0; //point to inst = 0
         end else if (index == 64) begin //pc_fetch 
-            pc_fetch <= pc_fetch + 4;
+            if (pcsel == 1)
+                    pc_fetch <= pc_from_alu_result;
+            else
+                pc_fetch <= pc_fetch + 4;
         end
     end
 

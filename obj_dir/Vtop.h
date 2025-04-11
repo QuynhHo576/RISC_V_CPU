@@ -77,11 +77,8 @@ VL_MODULE(Vtop) {
     
     // LOCAL SIGNALS
     // Internals; generally not touched by application code
-    VL_SIG8(top__DOT__id_reg_funct7_out,6,0);
-    VL_SIG8(top__DOT__id_reg_funct3_out,2,0);
-    VL_SIG8(top__DOT__mem_read_control,0,0);
-    VL_SIG8(top__DOT__mem_write_control,0,0);
-    VL_SIG8(top__DOT__mem_to_reg_control,0,0);
+    VL_SIG8(top__DOT__pc_sel_out,0,0);
+    VL_SIG8(top__DOT__id_branch_compare_result,0,0);
     VL_SIG8(top__DOT__fetch_inst__DOT__state,2,0);
     VL_SIG8(top__DOT__fetch_inst__DOT__next_state,2,0);
     VL_SIG8(top__DOT__Decoder__DOT__rs1,4,0);
@@ -91,15 +88,18 @@ VL_MODULE(Vtop) {
     VL_SIG8(top__DOT__Decoder__DOT__funct7,6,0);
     VL_SIG8(top__DOT__Decoder__DOT__funct3,2,0);
     VL_SIG8(top__DOT__Decoder__DOT__alu_op,3,0);
-    VL_SIG8(top__DOT__ControlUnit__DOT__pc_contrl,0,0);
     VL_SIG8(top__DOT__ControlUnit__DOT__opcode,6,0);
     VL_SIG8(top__DOT__ControlUnit__DOT__funct7,6,0);
     VL_SIG8(top__DOT__ControlUnit__DOT__funct3,2,0);
     VL_SIG8(top__DOT__ControlUnit__DOT__reg_write,0,0);
     VL_SIG8(top__DOT__ControlUnit__DOT__mem_read,0,0);
     VL_SIG8(top__DOT__ControlUnit__DOT__mem_write,0,0);
-    VL_SIG8(top__DOT__ControlUnit__DOT__alu_src,0,0);
+    VL_SIG8(top__DOT__ControlUnit__DOT__alu_operand1_control,0,0);
+    VL_SIG8(top__DOT__ControlUnit__DOT__alu_operand2_control,0,0);
     VL_SIG8(top__DOT__ControlUnit__DOT__mem_to_reg,0,0);
+    VL_SIG8(top__DOT__ControlUnit__DOT__pcSel,1,0);
+    VL_SIG8(top__DOT__BranchCompare__DOT__branch_compare_regA_data_unsigned,0,0);
+    VL_SIG8(top__DOT__BranchCompare__DOT__branch_compare_regB_data_unsigned,0,0);
     //char	__VpadToAlign139[1];
     VL_SIG16(top__DOT__fetch_inst__DOT__index,9,0);
     VL_SIG16(top__DOT__fetch_inst__DOT__pc_fetch,9,0);
@@ -109,7 +109,9 @@ VL_MODULE(Vtop) {
     //char	__VpadToAlign156[4];
     VL_SIG64(top__DOT__regA_data_out,63,0);
     VL_SIG64(top__DOT__regB_data_out,63,0);
+    VL_SIG64(top__DOT__ex_operand_1_in,63,0);
     VL_SIG64(top__DOT__ex_operand_2_in,63,0);
+    VL_SIG64(top__DOT__ex_mem_read_data_out,63,0);
     VL_SIG64(top__DOT__fetch_inst__DOT__pc,63,0);
     VL_SIG64(top__DOT__fetch_inst__DOT__next_pc,63,0);
     VL_SIG64(top__DOT__fetch_inst__DOT__fetched_instr,63,0);
@@ -123,11 +125,12 @@ VL_MODULE(Vtop) {
     VL_SIG64(top__DOT__ALU__DOT__result_add_word,63,0);
     VL_SIG(top__DOT__fetch_inst__DOT__instruction_array[1000],31,0);
     VL_SIG64(top__DOT__RegisterFile__DOT__registers[32],63,0);
+    VL_SIG64(top__DOT__D_MEMORY__DOT__d_memory[1024],63,0);
     
     // LOCAL VARIABLES
     // Internals; generally not touched by application code
     VL_SIG8(__Vclklast__TOP__clk,0,0);
-    //char	__VpadToAlign4533[3];
+    //char	__VpadToAlign12741[3];
     VL_SIG(top__DOT__fetch_inst__DOT____Vlvbound1,31,0);
     VL_SIG(top__DOT__fetch_inst__DOT____Vlvbound2,31,0);
     VL_SIG(__Vm_traceActivity,31,0);
@@ -178,9 +181,13 @@ VL_MODULE(Vtop) {
     static void	_eval_initial(Vtop__Syms* __restrict vlSymsp);
     static void	_eval_settle(Vtop__Syms* __restrict vlSymsp);
     static void	_initial__TOP__1(Vtop__Syms* __restrict vlSymsp);
+    static void	_sequent__TOP__11(Vtop__Syms* __restrict vlSymsp);
     static void	_sequent__TOP__2(Vtop__Syms* __restrict vlSymsp);
     static void	_sequent__TOP__5(Vtop__Syms* __restrict vlSymsp);
     static void	_sequent__TOP__7(Vtop__Syms* __restrict vlSymsp);
+    static void	_sequent__TOP__9(Vtop__Syms* __restrict vlSymsp);
+    static void	_settle__TOP__10(Vtop__Syms* __restrict vlSymsp);
+    static void	_settle__TOP__12(Vtop__Syms* __restrict vlSymsp);
     static void	_settle__TOP__3(Vtop__Syms* __restrict vlSymsp);
     static void	_settle__TOP__6(Vtop__Syms* __restrict vlSymsp);
     static void	_settle__TOP__8(Vtop__Syms* __restrict vlSymsp);

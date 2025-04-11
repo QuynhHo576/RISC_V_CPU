@@ -6,6 +6,8 @@
 `include "control_logic.sv"
 `include "alu.sv"
 `include "dmem.sv"
+`include "branch_compare.sv"
+//`include "pc_control.sv"
 
 module top
 #(
@@ -84,14 +86,39 @@ module top
 //ALU: op1 op2, tin hieu chon phep toan, function add, and, xor, shift
 //load and store
 
-//============FETCH (FETCH STAGE)============================
+
+//============PC CONTROL (FETCH STAGE (output) + EX STAGE(input))============================
+// logic [63:0]    pc_control_pc_fetch;
+
+// PCControl       PCControl(
+//         .clk(clk),
+//         .entry(entry),
+//         .reset(reset),
+//         .pc_from_alu_result(ex_alu_result_out),
+//         .pcsel(pc_sel_out),
+
+//         .pc_fetch(pc_control_pc_fetch),
+//         //.next_pc_fetch,
+// );
+//============FETCH (FETCH STAGE)============================================================
 logic [31:0] if_instr;
 logic [63:0] if_address_out; 
+// always_comb begin
+//     case (pcSel)
+//         PC_4:     pc_next = pc + 4;
+//         PC_BR:    pc_next = pc_branch_target; // e.g., PC + imm (B-type)
+//         PC_JAL:   pc_next = pc_jal_target;    // e.g., PC + imm (J-type)
+//         PC_JALR:  pc_next = pc_jalr_target;   // e.g., rs1 + imm
+//     endcase
+// end
+
 
 Fetch fetch_inst (
         .clk            (clk),
         .reset          (reset),
         .entry          (entry),
+        .pc_from_alu_result(ex_alu_result_out),
+        .pcsel          (pc_sel_out),
 
         // AXI Read Address Channel
         .m_axi_araddr   (m_axi_araddr),
@@ -152,7 +179,7 @@ Decoder Decoder(
         .id_reg_imm_unsigned_out(id_reg_imm_unsigned_out),
         .id_reg_opcode_out(id_reg_opcode_out),
         .id_reg_funct7_out(id_reg_funct7_out),
-        .id_reg_funct3_out(id_reg_funct7_out),
+        .id_reg_funct3_out(id_reg_funct3_out),
         .id_alu_op_out(id_alu_op_out)
 );
 
@@ -160,17 +187,22 @@ Decoder Decoder(
 logic reg_write_control;          // control signal to write to register
 logic mem_read_control;           // control signal for memory read
 logic mem_write_control;          // control signal for memory write
-logic alu_src_control;            // ALU source control signal - use for when ALU need imm or rs2
+logic alu_operand1_control;
+logic alu_operand2_control;            // ALU source control signal - use for when ALU need imm or rs2
 logic mem_to_reg_control;
+logic pc_sel_out;
 
 ControlUnit ControlUnit(
         .if_instr(if_instr),
+        .branch_compare_result(id_branch_compare_result), //for B-type instruction
 
         .reg_write_control(reg_write_control),
         .mem_read_control(mem_read_control),
         .mem_write_control(mem_write_control),
-        .alu_src_control(alu_src_control),
-        .mem_to_reg_control(mem_to_reg_control)
+        .alu_operand1_control_out(alu_operand1_control),
+        .alu_operand2_control_out(alu_operand2_control),
+        .mem_to_reg_control(mem_to_reg_control),
+        .pc_sel_out(pc_sel_out)
 );
 
 //===============REG_FILE  (DECODE STAGE)============================
@@ -190,14 +222,31 @@ RegisterFile RegisterFile(
         .regB_data_out(regB_data_out)
 );
 
-//===============ALU (EXECUTE STAGE)============================
-logic [63:0]    ex_alu_result_out;
+//===============BRANCH COMPARE FOR B-TYPE INSTRUCTION  (DECODE STAGE)==========
+logic   id_branch_compare_result;
+
+BranchCompare BranchCompare(
+        .branch_compare_regA_data(regA_data_out),
+        .branch_compare_regB_data(regB_data_out),
+        .branch_compare_opcode(id_reg_opcode_out),
+        .branch_compare_funct3(id_reg_funct3_out),
+
+        .branch_compare_result(id_branch_compare_result)
+);
+
+//if id_branch_compare_result = 1 then pcsel = pc + imm, else pc = pc + 4
+//===============ALU (EXECUTE STAGE)============================================
+logic [63:0]    ex_operand_1_in;
 logic [63:0]    ex_operand_2_in;
 
-assign ex_operand_2_in = alu_src_control ? id_reg_imm_out : regB_data_out; //select imm or rs2 depends on the instruction - Bsel
+//first mux to choose either pc (B-type) or regA_data (I/S-type)
+//for B-type re-route datapath with alu_result to pccontrol before fetching
+assign ex_operand_1_in = alu_operand1_control? if_address_out: regA_data_out;
+//second mux to choose either imm (I-type) or regB_data (R-type)
+assign ex_operand_2_in = alu_operand2_control? id_reg_imm_out : regB_data_out; //select imm or rs2 depends on the instruction - Bsel
 
 ALU     ALU(
-        .ex_operand1_in(regA_data_out), // R[rs1]
+        .ex_operand1_in(ex_operand_1_in), // R[rs1]
         .ex_operand2_in(ex_operand_2_in),
         .ex_alu_op_in(id_alu_op_out),
         .ex_alu_result_out(ex_alu_result_out)
@@ -211,12 +260,12 @@ Dmem    D_MEMORY(
         .clk(clk),
         .reset(reset),
         .ex_mem_address(ex_alu_result_out),
-        //.ex_mem_write_data(),
+        .ex_mem_write_data(regB_data_out),
         .ex_mem_memory_write(mem_write_control), //from control logic
         .ex_mem_memory_read(mem_read_control), //from control logic
 
         .ex_mem_read_data_out(ex_mem_read_data_out)
-)
+);
 //at this point, to input back to rd in reg_file, we need to choose either ex_mem_read_data_out or ex_alu_result_out
 logic [63:0] mem_or_alu_result_out;
 assign mem_or_alu_result_out = mem_to_reg_control ? ex_mem_read_data_out : ex_alu_result_out;
