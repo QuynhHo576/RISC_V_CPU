@@ -540,7 +540,7 @@ module Decoder (
                 7'b0010111: begin /// rd = pc + (imm << 12)
                     rs1 = 0;
                     rs2 = 0;
-                    imm_signed = {input_bin[31:12], 12'b0}; 
+                    imm_signed = {{32{input_bin[31]}}, input_bin[31:12], 12'b0}; 
                     imm = imm_signed;
                     funct7 = 0;
                     funct3 = 0;

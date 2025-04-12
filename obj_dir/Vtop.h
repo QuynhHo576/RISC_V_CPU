@@ -78,9 +78,9 @@ VL_MODULE(Vtop) {
     // LOCAL SIGNALS
     // Internals; generally not touched by application code
     VL_SIG8(top__DOT__pc_sel_out,0,0);
-    VL_SIG8(top__DOT__id_branch_compare_result,0,0);
     VL_SIG8(top__DOT__fetch_inst__DOT__state,2,0);
     VL_SIG8(top__DOT__fetch_inst__DOT__next_state,2,0);
+    VL_SIG8(top__DOT__fetch_inst__DOT__pcSel,1,0);
     VL_SIG8(top__DOT__Decoder__DOT__rs1,4,0);
     VL_SIG8(top__DOT__Decoder__DOT__rs2,4,0);
     VL_SIG8(top__DOT__Decoder__DOT__rd,4,0);
@@ -88,25 +88,20 @@ VL_MODULE(Vtop) {
     VL_SIG8(top__DOT__Decoder__DOT__funct7,6,0);
     VL_SIG8(top__DOT__Decoder__DOT__funct3,2,0);
     VL_SIG8(top__DOT__Decoder__DOT__alu_op,3,0);
-    VL_SIG8(top__DOT__ControlUnit__DOT__opcode,6,0);
-    VL_SIG8(top__DOT__ControlUnit__DOT__funct7,6,0);
-    VL_SIG8(top__DOT__ControlUnit__DOT__funct3,2,0);
     VL_SIG8(top__DOT__ControlUnit__DOT__reg_write,0,0);
     VL_SIG8(top__DOT__ControlUnit__DOT__mem_read,0,0);
     VL_SIG8(top__DOT__ControlUnit__DOT__mem_write,0,0);
     VL_SIG8(top__DOT__ControlUnit__DOT__alu_operand1_control,0,0);
     VL_SIG8(top__DOT__ControlUnit__DOT__alu_operand2_control,0,0);
-    VL_SIG8(top__DOT__ControlUnit__DOT__mem_to_reg,0,0);
     VL_SIG8(top__DOT__ControlUnit__DOT__pcSel,1,0);
+    VL_SIG8(top__DOT__ControlUnit__DOT__mem_to_reg,1,0);
     VL_SIG8(top__DOT__BranchCompare__DOT__branch_compare_regA_data_unsigned,0,0);
     VL_SIG8(top__DOT__BranchCompare__DOT__branch_compare_regB_data_unsigned,0,0);
-    //char	__VpadToAlign139[1];
     VL_SIG16(top__DOT__fetch_inst__DOT__index,9,0);
     VL_SIG16(top__DOT__fetch_inst__DOT__pc_fetch,9,0);
     VL_SIG(top__DOT__if_instr,31,0);
     VL_SIG(top__DOT__Decoder__DOT__imm,31,0);
     VL_SIG(top__DOT__RegisterFile__DOT__i,31,0);
-    //char	__VpadToAlign156[4];
     VL_SIG64(top__DOT__regA_data_out,63,0);
     VL_SIG64(top__DOT__regB_data_out,63,0);
     VL_SIG64(top__DOT__ex_operand_1_in,63,0);
@@ -130,7 +125,7 @@ VL_MODULE(Vtop) {
     // LOCAL VARIABLES
     // Internals; generally not touched by application code
     VL_SIG8(__Vclklast__TOP__clk,0,0);
-    //char	__VpadToAlign12741[3];
+    //char	__VpadToAlign12733[3];
     VL_SIG(top__DOT__fetch_inst__DOT____Vlvbound1,31,0);
     VL_SIG(top__DOT__fetch_inst__DOT____Vlvbound2,31,0);
     VL_SIG(__Vm_traceActivity,31,0);
@@ -187,7 +182,6 @@ VL_MODULE(Vtop) {
     static void	_sequent__TOP__7(Vtop__Syms* __restrict vlSymsp);
     static void	_sequent__TOP__9(Vtop__Syms* __restrict vlSymsp);
     static void	_settle__TOP__10(Vtop__Syms* __restrict vlSymsp);
-    static void	_settle__TOP__12(Vtop__Syms* __restrict vlSymsp);
     static void	_settle__TOP__3(Vtop__Syms* __restrict vlSymsp);
     static void	_settle__TOP__6(Vtop__Syms* __restrict vlSymsp);
     static void	_settle__TOP__8(Vtop__Syms* __restrict vlSymsp);
@@ -197,6 +191,7 @@ VL_MODULE(Vtop) {
     static void	traceChgThis__4(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
     static void	traceChgThis__5(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
     static void	traceChgThis__6(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
+    static void	traceChgThis__7(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
     static void	traceFullThis(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
     static void	traceFullThis__1(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);
     static void	traceInitThis(Vtop__Syms* __restrict vlSymsp, VerilatedVcd* vcdp, uint32_t code);

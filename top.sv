@@ -193,7 +193,7 @@ logic mem_to_reg_control;
 logic pc_sel_out;
 
 ControlUnit ControlUnit(
-        .if_instr(if_instr),
+        .if_opcode(id_reg_opcode_out),
         .branch_compare_result(id_branch_compare_result), //for B-type instruction
 
         .reg_write_control(reg_write_control),
@@ -215,7 +215,7 @@ RegisterFile RegisterFile(
         .regA_addr_in(id_reg_rs1_out),
         .regB_addr_in(id_reg_rs2_out),
         .rd_addr_in(id_reg_rd_out), //reg destination
-        .reg_write_data_in(mem_or_alu_result_out), //output from ALU OR data_read of MEM stage OR  => mux can be checked at MEM stage
+        .reg_write_data_in(write_back_data), //output from ALU OR data_read of MEM stage OR  => mux can be checked at MEM stage
         .reg_write_enable(reg_write_control), //enable from control logic
 
         .regA_data_out(regA_data_out),
@@ -240,8 +240,8 @@ logic [63:0]    ex_operand_1_in;
 logic [63:0]    ex_operand_2_in;
 
 //first mux to choose either pc (B-type) or regA_data (I/S-type)
-//for B-type re-route datapath with alu_result to pccontrol before fetching
-assign ex_operand_1_in = alu_operand1_control? if_address_out: regA_data_out;
+assign ex_operand_1_in = alu_operand1_control? if_address_out: regA_data_out; ///for B-type re-route datapath with alu_result to pccontrol before fetching
+
 //second mux to choose either imm (I-type) or regB_data (R-type)
 assign ex_operand_2_in = alu_operand2_control? id_reg_imm_out : regB_data_out; //select imm or rs2 depends on the instruction - Bsel
 
@@ -266,11 +266,18 @@ Dmem    D_MEMORY(
 
         .ex_mem_read_data_out(ex_mem_read_data_out)
 );
+//===============WRITE BACK STAGE============================
 //at this point, to input back to rd in reg_file, we need to choose either ex_mem_read_data_out or ex_alu_result_out
-logic [63:0] mem_or_alu_result_out;
-assign mem_or_alu_result_out = mem_to_reg_control ? ex_mem_read_data_out : ex_alu_result_out;
-                             //(from control logic)
-
+// logic [63:0] write_back_data;
+// assign write_back_data = mem_to_reg_control ? ex_mem_read_data_out : ex_alu_result_out;
+//                              //(from control logic)
+logic [63:0] write_back_data;
+assign write_back_data = 
+    (mem_to_reg_control == 2'b00) ? ex_alu_result_out :
+    (mem_to_reg_control == 2'b01) ? ex_mem_read_data_out :
+    (mem_to_reg_control == 2'b10) ? if_address_out + 4 :
+    (mem_to_reg_control == 2'b11) ? 64'b0:
+    64'b0;
 /////////////////////////////////////////////////////////////////////////
 
 

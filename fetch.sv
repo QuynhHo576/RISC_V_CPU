@@ -123,13 +123,24 @@ module Fetch (
         end
     end
 
+    //===============PC HANDLING=====================
+
+    typedef enum logic [1:0] {
+    PC_4    = 2'b00, // normal sequential
+    PC_BR   = 2'b01, // branch target (B-type)
+    PC_JAL  = 2'b10, // jal target
+    PC_JALR = 2'b11  // jalr target
+    } pcSel_t;
+
+    pcSel_t pcSel;
+
     always_ff @(posedge clk) begin
         if (reset) begin
             pc_fetch <= 0; //point to inst = 0
         end else if (index == 64) begin //pc_fetch 
-            if (pcsel == 1)
+            if (pcsel == PC_BR || pcsel == PC_JAL || pc == PC_JALR)
                     pc_fetch <= pc_from_alu_result;
-            else
+            else if (pcsel == PC_4)
                 pc_fetch <= pc_fetch + 4;
         end
     end

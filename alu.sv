@@ -13,7 +13,7 @@ module ALU (
         case (ex_alu_op_in)
             4'b0000: result = ex_operand1_in + ex_operand2_in;  // ADD NOT WORD
             4'b1110: result = result_add_word;
-            4'b1111: result = ex_operand2_in;
+            4'b1111: result = ex_operand2_in; //for LUI, although regA data is passed through, it is not used
             4'b0001: result = ex_operand1_in - ex_operand2_in;  // SUB
             4'b0010: result = ex_operand1_in & ex_operand2_in;  // AND
             4'b0011: result = ex_operand1_in | ex_operand2_in;  // OR
